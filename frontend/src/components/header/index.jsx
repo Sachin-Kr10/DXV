@@ -1,6 +1,6 @@
-import { Link } from "react-router";
-import logo from "../../assets/logo/1.jpg";
+import { Link, NavigationType } from "react-router";
 import Search from "../search";
+import Navigation from "./navigation";
 import Badge from "@mui/material/Badge";
 import { styled } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
@@ -18,42 +18,68 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
-const Logo = () => (
-  <Link
-    to="/"
-    className="
-      group relative inline-flex items-center justify-center
-      font-['Playfair_Display']
-      text-[20px] sm:text-[22px] lg:text-[28px]
-      tracking-[0.25em] lg:tracking-[0.4em]
-      text-[#0B0B0B]
-      select-none
-    "
-  >
-    {/* subtle halo – desktop only */}
-    <span
+const Logo = () => {
+  return (
+    <Link
+      to="/"
       className="
-        absolute inset-0
-        rounded-full
-        bg-[radial-gradient(circle_at_center,#C9A24D33,transparent_60%)]
-        opacity-0 scale-75 blur-2xl
-        lg:group-hover:opacity-100
-        lg:group-hover:scale-100
-        transition-all duration-700
+        group relative inline-flex items-center justify-center
+        font-['Playfair_Display']
+        text-[20px] sm:text-[22px] lg:text-[28px]
+        tracking-[0.25em] lg:tracking-[0.4em]
+        text-[#0B0B0B]
+        select-none
+        overflow-hidden
       "
-    />
+    >
+      
+      <span
+        className="
+          absolute inset-0
+          rounded-full
+          bg-[radial-gradient(circle_at_center,#C9A24D26,transparent_60%)]
+          opacity-0 scale-75 blur-2xl
+          lg:group-hover:opacity-100
+          lg:group-hover:scale-100
+          transition-all duration-700 ease-out
+        "
+      />
+      <span
+        className="
+          absolute left-0 top-1/2
+          h-[1px] w-full
+          bg-gradient-to-r from-transparent via-[#C9A24D] to-transparent
+          -translate-y-1/2
+          scale-x-0
+          lg:group-hover:scale-x-100
+          transition-transform duration-700 ease-out
+        "
+      />
 
-    {/* logo text */}
-    <span className="relative z-10 flex items-center">
-      <span className="font-light">D</span>
-      <span className="mx-1 font-semibold text-[#C9A24D]">X</span>
-      <span className="font-light">V</span>
-    </span>
-  </Link>
-);
+      <span className="relative z-10 flex items-center">
+        <span className="font-light opacity-90">D</span>
+
+        <span
+          className="
+            mx-1 lg:mx-2
+            font-semibold
+            text-[#C9A24D]
+            scale-110
+            lg:group-hover:scale-125
+            transition-transform duration-700 ease-out
+          "
+        >
+          X
+        </span>
+        <span className="font-light opacity-90">V</span>
+      </span>
+    </Link>
+  );
+};
 
 function Header() {
   return (
+    <>    
     <header className="sticky top-0 z-50 bg-white border-b border-[#E5E5E5]">
       <div className="hidden md:block bg-[#0B0B0B] text-[#F7F7F7] text-[13px] py-2">
         <div className="container flex justify-between items-center">
@@ -77,7 +103,7 @@ function Header() {
             <Tooltip title="Compare">
               <IconButton size="small">
                 <StyledBadge badgeContent={2}>
-                  <MdCompare size={18} />
+                  <MdCompare size={25} />
                 </StyledBadge>
               </IconButton>
             </Tooltip>
@@ -85,7 +111,7 @@ function Header() {
             <Tooltip title="Wishlist">
               <IconButton size="small">
                 <StyledBadge badgeContent={3}>
-                  <IoHeartCircleOutline size={20} />
+                  <IoHeartCircleOutline size={25} />
                 </StyledBadge>
               </IconButton>
             </Tooltip>
@@ -93,14 +119,14 @@ function Header() {
             <Tooltip title="Cart">
               <IconButton size="small">
                 <StyledBadge badgeContent={1}>
-                  <FaOpencart size={18} />
+                  <FaOpencart size={25} />
                 </StyledBadge>
               </IconButton>
             </Tooltip>
 
             <Link to="/login" className="lg:hidden">
               <IconButton size="small">
-                <PiUserCircleFill size={22} />
+                <PiUserCircleFill size={30} />
               </IconButton>
             </Link>
 
@@ -117,7 +143,10 @@ function Header() {
         </div>
 
       </div>
+
     </header>
+    <Navigation></Navigation>
+    </>
   );
 }
 

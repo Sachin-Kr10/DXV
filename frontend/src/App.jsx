@@ -1,6 +1,6 @@
 import './styles/App.css'
 import Header from './components/header'
-import Home from './pages/hm/index'
+import Home from './pages/home/index'
 
 import { Routes,Route } from 'react-router'
 function App() {
@@ -9,7 +9,7 @@ function App() {
     <>
     <Header></Header>
     <Routes>
-      {/* <Route path={"/"} exact={true} element={<Home/>} /> */}
+      <Route path={"/"} exact={true} element={<Home/>} />
     </Routes>
     </>
   )
