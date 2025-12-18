@@ -1,1 +1,11 @@
 @import "tailwindcss";
+
+body{
+    font-optical-sizing: auto;
+}
+.container{
+     width: 90%;
+     margin: auto;
+}
+
+
