@@ -1,11 +1,24 @@
 @import "tailwindcss";
 
-body{
-    font-optical-sizing: auto;
-}
-.container{
-     width: 90%;
-     margin: auto;
+body {
+    margin: 0;
+    padding: 0;
+  background-color: #F7F7F7;
+  color: #1A1A1A;
+  font-family: 'Inter', system-ui, sans-serif;
 }
 
+.container {
+  width: 90%;
+  max-width: 1400px;
+  margin: auto;
+}
+
+.link {
+  color: #8E8E8E;
+  transition: color 0.3s ease;
+}
+.link:hover {
+  color: #C9A24D;
+}
 
