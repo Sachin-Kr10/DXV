@@ -18,98 +18,108 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
+const Logo = () => (
+  <Link
+    to="/"
+    className="
+      group relative inline-flex items-center justify-center
+      font-['Playfair_Display']
+      text-[20px] sm:text-[22px] lg:text-[28px]
+      tracking-[0.25em] lg:tracking-[0.4em]
+      text-[#0B0B0B]
+      select-none
+    "
+  >
+    {/* subtle halo – desktop only */}
+    <span
+      className="
+        absolute inset-0
+        rounded-full
+        bg-[radial-gradient(circle_at_center,#C9A24D33,transparent_60%)]
+        opacity-0 scale-75 blur-2xl
+        lg:group-hover:opacity-100
+        lg:group-hover:scale-100
+        transition-all duration-700
+      "
+    />
+
+    {/* logo text */}
+    <span className="relative z-10 flex items-center">
+      <span className="font-light">D</span>
+      <span className="mx-1 font-semibold text-[#C9A24D]">X</span>
+      <span className="font-light">V</span>
+    </span>
+  </Link>
+);
+
 function Header() {
   return (
-    <header className="bg-[#FFFFFF] border-b border-[#E5E5E5]">
+    <header className="sticky top-0 z-50 bg-white border-b border-[#E5E5E5]">
       <div className="hidden md:block bg-[#0B0B0B] text-[#F7F7F7] text-[13px] py-2">
         <div className="container flex justify-between items-center">
           <p>Get up to 50% off new season styles</p>
-          <ul className="flex gap-4">
-            <li>
-              <Link className="hover:text-[#C9A24D]" to="/help-center">
-                Help
-              </Link>
-            </li>
-            <li>
-              <Link className="hover:text-[#C9A24D]" to="/order-tracking">
-                Track Order
-              </Link>
-            </li>
-          </ul>
+          <div className="flex gap-4">
+            <Link className="hover:text-[#C9A24D]" to="/help-center">Help</Link>
+            <Link className="hover:text-[#C9A24D]" to="/order-tracking">Track Order</Link>
+          </div>
         </div>
       </div>
 
-      <div className="container py-3 flex items-center justify-between flex-nowrap gap-3">
-        <div className="flex-shrink-0">
-          <Link
-            to="/"
-            className="
-    font-['Playfair_Display']
-    text-[20px] sm:text-[22px] lg:text-[26px]
-    tracking-[0.18em] sm:tracking-[0.25em] lg:tracking-[0.3em]
-    text-[#0B0B0B]
-    whitespace-nowrap
-    select-none
-  "
-          >
-            <span>D</span>
-            <span className="mx-1 text-[#C9A24D]">X</span>
-            <span>V</span>
-          </Link>
-        </div>
+      <div className="container py-2">
 
-        <div className="flex-1 min-w-0 max-w-[520px]">
-          <Search />
-        </div>
-
-        <div className="flex items-center gap-2 flex-shrink-0">
-          <div className="hidden lg:flex items-center gap-2">
-            <Link className="link text-sm" to="/login">
-              Login
-            </Link>
-            <span className="text-[#8E8E8E]">|</span>
-            <Link className="link text-sm" to="/register">
-              Register
-            </Link>
+        <div className="flex items-center justify-between gap-3">
+          <Logo />
+          <div className="hidden md:block flex-1 max-w-[520px] mx-4">
+            <Search />
           </div>
 
-          <Tooltip title="Compare">
-            <IconButton size="small">
-              <StyledBadge badgeContent={2}>
-                <MdCompare size={18} />
-              </StyledBadge>
-            </IconButton>
-          </Tooltip>
+          <div className="flex items-center gap-1 flex-shrink-0">
+            <Tooltip title="Compare">
+              <IconButton size="small">
+                <StyledBadge badgeContent={2}>
+                  <MdCompare size={18} />
+                </StyledBadge>
+              </IconButton>
+            </Tooltip>
 
-          <Tooltip title="Wishlist">
-            <IconButton size="small">
-              <StyledBadge badgeContent={3}>
-                <IoHeartCircleOutline size={20} />
-              </StyledBadge>
-            </IconButton>
-          </Tooltip>
+            <Tooltip title="Wishlist">
+              <IconButton size="small">
+                <StyledBadge badgeContent={3}>
+                  <IoHeartCircleOutline size={20} />
+                </StyledBadge>
+              </IconButton>
+            </Tooltip>
 
-          <Tooltip title="Cart">
-            <IconButton size="small">
-              <StyledBadge badgeContent={1}>
-                <FaOpencart size={18} />
-              </StyledBadge>
-            </IconButton>
-          </Tooltip>
-          <Link
-            to="/login"
-            className="lg:hidden flex items-center justify-center 
-            text-[#0B0B0B] hover:text-[#C9A24D] transition-colors">
-            <Tooltip title="Login/Register">
+            <Tooltip title="Cart">
+              <IconButton size="small">
+                <StyledBadge badgeContent={1}>
+                  <FaOpencart size={18} />
+                </StyledBadge>
+              </IconButton>
+            </Tooltip>
+
+            <Link to="/login" className="lg:hidden">
               <IconButton size="small">
                 <PiUserCircleFill size={22} />
               </IconButton>
-            </Tooltip>
-          </Link>
+            </Link>
+
+            <div className="hidden lg:flex items-center gap-2 ml-2">
+              <Link to="/login" className="text-sm">Login</Link>
+              <span className="text-[#8E8E8E]">|</span>
+              <Link to="/register" className="text-sm">Register</Link>
+            </div>
+
+          </div>
         </div>
+        <div className="mt-2 md:hidden">
+          <Search />
+        </div>
+
       </div>
     </header>
   );
 }
 
 export default Header;
+
