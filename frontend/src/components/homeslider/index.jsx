@@ -19,7 +19,7 @@ const slides = [
 
 function HomeSlider() {
   return (
-    <section className="bg-[#E5E5E5] py-6 sm:py-10">
+    <section className="bg-[#E5E5E5] py-6 sm:py-6">
       <Swiper
         modules={[Navigation, Autoplay]}
         loop
@@ -48,7 +48,7 @@ function HomeSlider() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#000000cc] via-transparent to-transparent" />
 
-              <div className="absolute bottom-4 left-4 right-4">
+              <div className="absolute bottom-10 left-[70%]">
                 <h3 className="text-[#F7F7F7] text-sm sm:text-base font-medium tracking-wide">
                   {slide.title}
                 </h3>
