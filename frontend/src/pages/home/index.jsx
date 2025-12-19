@@ -8,8 +8,8 @@ function Home() {
     <>
     <HomeSlider/>
     <BrandSlider/>
-    <section className="bg-[#E5E5E5] py-6 md:py-10">
-  <div className="container mx-auto ">
+    <section className="bg-[#E5E5E5] py-6 md:py-6">
+    <div className="container mx-auto ">
     <div
       className="
         flex flex-col gap-4
@@ -17,35 +17,33 @@ function Home() {
         bg-[#FFFFFF]
         border border-[#C9A24D]
         rounded-lg
-        px-4 py-5 md:px-6
+        px-5 py-5 md:px-10
       "
     >
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 md:text-center">
         <CiDeliveryTruck className="text-[28px] text-[#C9A24D]" />
-        <span className="text-[18px] md:text-[20px] font-[600] text-[#0B0B0B]">
+        <span className="text-[15px] md:text-[20px] font-[600] text-[#0B0B0B]">
           Free Shipping
         </span>
       </div>
 
-      <div className="text-center md:text-left">
-        <p className="text-[14px] md:text-[15px] text-[#8E8E8E] font-[500]">
+      <div className="text-center md:text-center">
+        <p className="text-[10px] md:text-[15px] text-[#8E8E8E] font-[500]">
           Free delivery on your first order above
-          <span className="text-[#0B0B0B] font-[600]"> ₹1000</span>
+          <span className="text-[#0B0B0B] font-[400]"> ₹1000</span>
         </p>
       </div>
 
-      <div className="text-center md:text-right">
-        <span className="text-[22px] md:text-[26px] font-bold text-[#1A1A1A]">
-          ₹1000+
+      <div className="text-center md:text-center">
+        <span className="text-[15px] md:text-[20px] font-bold text-[#1A1A1A]">
+          Order Now
         </span>
       </div>
     </div>
-  </div>
-</section>
+    </div>
+    </section>
 
-    <br />
-    <br />
     </>
   )
 }
