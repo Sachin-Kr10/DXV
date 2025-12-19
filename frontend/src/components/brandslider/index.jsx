@@ -6,35 +6,25 @@ import img1 from "../../assets/img/1.jpg"
 import img2 from "../../assets/img/2.jpg"
 import "swiper/css";
 
-/* ---------- Dummy Brand Data ---------- */
 const brands = [
   { id: 1, name: "Leather Watch", logo: img1 },
   { id: 2, name: "Rolling Diamond", logo: img2 },
   { id: 3, name: "Wooden Chair", logo: img1 },
-  { id: 4, name: "Sneakers", logo: "https://via.placeholder.com/120x120?text=Sneakers" },
-  { id: 5, name: "Luxury Purse", logo: "https://via.placeholder.com/120x120?text=Purse" },
-  { id: 6, name: "Gaming Gear", logo: "https://via.placeholder.com/120x120?text=Gaming" },
-  { id: 7, name: "Premium Bags", logo: "https://via.placeholder.com/120x120?text=Bags" },
-  { id: 8, name: "Fashion Wear", logo: "https://via.placeholder.com/120x120?text=Fashion" },
-  { id: 9, name: "Fashion Wear", logo: "https://via.placeholder.com/120x120?text=Fashion" },
-  { id: 10, name: "Fashion Wear", logo: "https://via.placeholder.com/120x120?text=Fashion" },
-  { id: 11, name: "Fashion Wear", logo: "https://via.placeholder.com/120x120?text=Fashion" },
-  { id: 12, name: "Fashion Wear", logo: "https://via.placeholder.com/120x120?text=Fashion" },
-  { id: 13, name: "Fashion Wear", logo: "https://via.placeholder.com/120x120?text=Fashion" },
-  { id: 14, name: "Fashion Wear", logo: "https://via.placeholder.com/120x120?text=Fashion" },
-  { id: 15, name: "Fashion Wear", logo: "https://via.placeholder.com/120x120?text=Fashion" },
-  { id: 16, name: "Fashion Wear", logo: "https://via.placeholder.com/120x120?text=Fashion" },
-  { id: 17, name: "Fashion Wear", logo: "https://via.placeholder.com/120x120?text=Fashion" },
-  { id: 18, name: "Fashion Wear", logo: "https://via.placeholder.com/120x120?text=Fashion" },
-  { id: 19, name: "Fashion Wear", logo: "https://via.placeholder.com/120x120?text=Fashion" },
-  { id: 20, name: "Fashion Wear", logo: "https://via.placeholder.com/120x120?text=Fashion" },
-  { id: 21, name: "Fashion Wear", logo: "https://via.placeholder.com/120x120?text=Fashion" },
-  { id: 22, name: "Fashion Wear", logo: "https://via.placeholder.com/120x120?text=Fashion" },
-  { id: 23, name: "Fashion Wear", logo: "https://via.placeholder.com/120x120?text=Fashion" },
-  { id: 24, name: "Fashion Wear", logo: "https://via.placeholder.com/120x120?text=Fashion" },
+  { id: 4, name: "Sneakers", logo: img1 },
+  { id: 5, name: "Luxury Purse", logo: img1 },
+  { id: 6, name: "Gaming Gear", logo: img1},
+  { id: 7, name: "Premium Bags", logo: img1 },
+  { id: 8, name: "Fashion Wear", logo: img1 },
+  { id: 9, name: "Fashion Wear", logo: img1 },
+  { id: 10, name: "Fashion Wear", logo: img1 },
+  { id: 11, name: "Fashion Wear", logo: img1 },
+  { id: 12, name: "Fashion Wear", logo: img1 },
+  { id: 13, name: "Fashion Wear", logo: img1 },
+  { id: 14, name: "Fashion Wear", logo: img1 },
+  { id: 15, name: "Fashion Wear", logo: img1 },
+  { id: 16, name: "Fashion Wear", logo: img1 },
 ];
 
-/* ---------- Soft Luxury Themes ---------- */
 const themes = [
   "bg-gradient-to-br from-[#FFF7E8] to-[#F3E7C6]",
   "bg-gradient-to-br from-[#F7F7F7] to-[#EAEAEA]",
@@ -46,7 +36,6 @@ const themes = [
 const BrandSlider = () => {
   return (
     <section className="bg-[#F7F7F7] py-12">
-      {/* Heading */}
       <div className="max-w-7xl mx-auto px-4 mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl md:text-3xl font-semibold tracking-wide text-[#0B0B0B]">
@@ -57,7 +46,6 @@ const BrandSlider = () => {
           </p>
         </div>
 
-        {/* Navigation */}
         <div className="flex gap-2">
           <button className="brand-prev w-9 h-9 rounded-full border border-[#E5E5E5] flex items-center justify-center hover:bg-[#C9A24D] hover:text-white transition">
             <FiChevronLeft size={18} />
@@ -68,7 +56,6 @@ const BrandSlider = () => {
         </div>
       </div>
 
-      {/* Slider */}
       <div className="max-w-7xl mx-auto px-4">
         <Swiper
           slidesPerView="auto"

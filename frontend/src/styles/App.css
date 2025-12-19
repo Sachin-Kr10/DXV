@@ -8,6 +8,16 @@ body {
   font-family: 'Inter', system-ui, sans-serif;
   overflow-x: hidden;
 }
+::-webkit-scrollbar{
+  width: 5px !important;
+  height: 5px !important;
+}
+::-webkit-scrollbar-thumb{
+  background: #C9A24D;
+}
+::-webkit-scrollbar-track{
+  background: #fff;
+}
 
 .container {
   width: 80%;
