@@ -23,3 +23,26 @@ body {
   color: #C9A24D;
 }
 
+.luxury-swiper .swiper-slide {
+  transform: scale(0.88);
+  transition: transform 0.5s ease, opacity 0.5s ease;
+  opacity: 0.6;
+}
+
+.luxury-swiper .swiper-slide-active {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.luxury-swiper .swiper-button-next,
+.luxury-swiper .swiper-button-prev {
+  color: #C9A24D;
+  width: 36px;
+  height: 36px;
+}
+
+.luxury-swiper .swiper-button-next::after,
+.luxury-swiper .swiper-button-prev::after {
+  font-size: 16px;
+  font-weight: bold;
+}
