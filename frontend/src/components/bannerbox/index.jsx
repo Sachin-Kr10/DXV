@@ -6,18 +6,14 @@ function BannerBox({ img, title }){
   return (
     <Link to="/" className="group block">
       <div className="relative overflow-hidden rounded-xl bg-[#FFFFFF] border border-[#E5E5E5] shadow-sm transition-all duration-500 hover:shadow-lg">
-        
-        {/* Image */}
         <img
           src={img}
           alt={title}
           className="w-full h-[220px] object-cover transition-transform duration-700 ease-out group-hover:scale-110"
         />
 
-        {/* Overlay */}
         <div className="absolute inset-0 bg-[#000000]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-        {/* Title */}
         <div className="absolute bottom-4 left-4 right-4">
           <p className="text-[#F7F7F7] text-sm tracking-widest uppercase">
             {title}

@@ -1,0 +1,45 @@
+import React from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { FreeMode, Navigation } from "swiper/modules";
+import "swiper/css";
+import ProductItem from "../Productitem";
+// Dummy products
+const products = Array.from({ length: 12 }).map((_, i) => ({
+  id: i + 1,
+  brand: "Souled Store",
+  title: "Oversize Black Printed T-Shirt Oversize Black Printed T-Shirt Oversize Black Printed T-Shirt",
+  price: 1000,
+  discountedPrice: 800,
+  discount: 20,
+  img1: "/src/assets/img/1.jpg",
+  img2: "/src/assets/img/2.jpg",
+}));
+
+function ProductSlider() {
+  return (
+    <section className="bg-[#F7F7F7] py-12">
+      <div className="max-w-7xl mx-auto px-4">
+        <Swiper
+          spaceBetween={24}
+          freeMode
+          grabCursor
+          modules={[FreeMode, Navigation]}
+          breakpoints={{
+            0: { slidesPerView: 2 },
+            640: { slidesPerView: 2 },
+            768: { slidesPerView: 4 },
+            1024: { slidesPerView: 5 },
+          }}
+        >
+          {products.map((product) => (
+            <SwiperSlide key={product.id}>
+              <ProductItem product={product} />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
+    </section>
+  );
+}
+
+export default ProductSlider;

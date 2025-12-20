@@ -17,7 +17,7 @@ const slides = [
   { id: 5, img: img2, title: "Signature Styles" },
 ];
 
-function HomeSlider() {
+function ImageSlider() {
   return (
     <div className=" bg-[#E5E5E5]">
     <section className="bg-[#E5E5E5] py-6 sm:py-6 homebox">
@@ -67,4 +67,4 @@ function HomeSlider() {
   );
 }
 
-export default HomeSlider;
+export default ImageSlider;

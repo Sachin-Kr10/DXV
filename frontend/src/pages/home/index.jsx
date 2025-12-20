@@ -1,13 +1,16 @@
 import React from 'react'
-import HomeSlider from '../../components/homeslider'
+import ImageSlider from '../../components/imageslider'
 import BrandSlider from '../../components/brandslider'
 import CategorySlider from '../../components/categoryslider';
 import { CiDeliveryTruck } from "react-icons/ci";
 import AdsBannerSlider from '../../components/adsbannerslider';
+import PopularCategorySlider from '../../components/popularcategoryslider';
+import ProductSlider from '../../components/productsslider';
+
 function Home() {
   return (
     <>
-    <HomeSlider/>
+    <ImageSlider/>
     <BrandSlider/>
     <section className="bg-[#E5E5E5] py-6 md:py-6">
     <div className="homebox mx-auto ">
@@ -44,8 +47,10 @@ function Home() {
     </div>
     </div>
     </section>
-    <CategorySlider></CategorySlider>
-    <AdsBannerSlider></AdsBannerSlider>
+    <CategorySlider/>
+    <AdsBannerSlider/>
+    <PopularCategorySlider/>
+    <ProductSlider/>
     </>
   )
 }
