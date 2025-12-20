@@ -1,15 +1,16 @@
 import React from 'react'
 import HomeSlider from '../../components/homeslider'
 import BrandSlider from '../../components/brandslider'
+import CategorySlider from '../../components/categoryslider';
 import { CiDeliveryTruck } from "react-icons/ci";
-
+import AdsBannerSlider from '../../components/adsbannerslider';
 function Home() {
   return (
     <>
     <HomeSlider/>
     <BrandSlider/>
     <section className="bg-[#E5E5E5] py-6 md:py-6">
-    <div className="container mx-auto ">
+    <div className="homebox mx-auto ">
     <div
       className="
         flex flex-col gap-4
@@ -43,7 +44,8 @@ function Home() {
     </div>
     </div>
     </section>
-
+    <CategorySlider></CategorySlider>
+    <AdsBannerSlider></AdsBannerSlider>
     </>
   )
 }

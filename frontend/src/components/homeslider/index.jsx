@@ -19,7 +19,8 @@ const slides = [
 
 function HomeSlider() {
   return (
-    <section className="bg-[#E5E5E5] py-6 sm:py-6">
+    <div className=" bg-[#E5E5E5]">
+    <section className="bg-[#E5E5E5] py-6 sm:py-6 homebox">
       <Swiper
         modules={[Navigation, Autoplay]}
         loop
@@ -62,6 +63,7 @@ function HomeSlider() {
         ))}
       </Swiper>
     </section>
+    </div>
   );
 }
 

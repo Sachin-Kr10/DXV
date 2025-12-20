@@ -59,7 +59,7 @@ const BrandSlider = () => {
       <div className="max-w-7xl mx-auto px-4">
         <Swiper
           slidesPerView="auto"
-          spaceBetween={16}
+          spaceBetween={28}
           slidesPerGroup={1}
           freeMode={true}
           grabCursor={true}

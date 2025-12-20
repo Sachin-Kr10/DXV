@@ -56,3 +56,17 @@ body {
   font-size: 16px;
   font-weight: bold;
 }
+
+.mySwiper .swiper-button-next,
+.mySwiper .swiper-button-prev {
+  color: #C9A24D;
+  width: 30px;
+  height: 36px;
+  
+}
+
+.homebox{
+  width: 90%;
+  max-width: 1400px;
+  margin: auto;
+}
