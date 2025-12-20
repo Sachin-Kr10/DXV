@@ -27,7 +27,7 @@ function PopularCategorySlider() {
 
   return (
     <>
-    <section className="bg-[#F7F7F7] py-12">
+    <section className="bg-[#F7F7F7] pt-12 pb-6 ">
       <div className="max-w-7xl mx-auto px-4 mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-6 md:gap-0">
         <div>
           <h1 className="text-2xl md:text-3xl font-semibold text-[#0B0B0B]">

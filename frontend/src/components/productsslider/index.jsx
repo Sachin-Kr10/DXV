@@ -7,7 +7,7 @@ import ProductItem from "../Productitem";
 const products = Array.from({ length: 12 }).map((_, i) => ({
   id: i + 1,
   brand: "Souled Store",
-  title: "Oversize Black Printed T-Shirt Oversize Black Printed T-Shirt Oversize Black Printed T-Shirt",
+  title: "Oversize Black Printed T-Shirt Oversize Black Printed T-Shirt",
   price: 1000,
   discountedPrice: 800,
   discount: 20,
@@ -17,7 +17,7 @@ const products = Array.from({ length: 12 }).map((_, i) => ({
 
 function ProductSlider() {
   return (
-    <section className="bg-[#F7F7F7] py-12">
+    <section className="bg-[#F7F7F7] ">
       <div className="max-w-7xl mx-auto px-4">
         <Swiper
           spaceBetween={24}
@@ -33,7 +33,9 @@ function ProductSlider() {
         >
           {products.map((product) => (
             <SwiperSlide key={product.id}>
-              <ProductItem product={product} />
+              <div className="h-full">
+                <ProductItem product={product} />
+              </div>
             </SwiperSlide>
           ))}
         </Swiper>
