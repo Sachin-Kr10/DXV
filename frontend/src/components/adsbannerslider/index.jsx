@@ -5,11 +5,11 @@ import { Link } from "react-router";
 import "swiper/css";
 import "swiper/css/navigation";
 import BannerBox from "../bannerbox";
+
 // Dummy Images
 import img1 from "../../assets/img/1.jpg";
 import img2 from "../../assets/img/2.jpg";
 
-/* -------------------- DUMMY DATA (10–12 ADS) -------------------- */
 const adsData = [
   { id: 1, img: img1, title: "Luxury Leather" },
   { id: 2, img: img2, title: "Modern Fashion" },
@@ -25,13 +25,9 @@ const adsData = [
   { id: 12, img: img2, title: "Modern Classic" },
 ];
 
-/* -------------------- BANNER CARD -------------------- */
-
-
-/* -------------------- SLIDER -------------------- */
 function AdsBannerSlider() {
   return (
-    <section className="bg-[#E5E5E5] py-10">
+    <section className="bg-[#E5E5E5] py-6">
       <div className="homebox mx-auto px-4">
        
         <Swiper

@@ -40,10 +40,10 @@ const CategorySlider = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="max-w-8xl mx-auto px-4">
         <Swiper
           slidesPerView="auto"
-          spaceBetween={12}
+          spaceBetween={1}
           freeMode
           grabCursor
           
@@ -62,7 +62,7 @@ const CategorySlider = () => {
      
                 <div
                   className="
-                    w-28 h-28 md:w-32 md:h-32
+                    w-25 h-25 md:w-28 md:h-28
                     rounded-full
                     overflow-hidden
                     border border-[#E5E5E5]
@@ -70,7 +70,7 @@ const CategorySlider = () => {
                     flex items-center justify-center
                     transition-all duration-300
                     group-hover:scale-105
-                    group-hover:shadow-[0_12px_30px_rgba(201,162,77,0.35)]
+                    group-hover:shadow-[0_12px_30px_rgba(201,222,77,0.35)]
                     group-hover:border-[#C9A24D]
                   "
                 >

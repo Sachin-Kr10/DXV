@@ -3,7 +3,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 
-function PopularCategorySlider() {
+function PopularCategorySlider(props) {
    const [value, setValue] = React.useState('one');
 
   const handleChange = (event, newValue) => {
@@ -31,7 +31,7 @@ function PopularCategorySlider() {
       <div className="max-w-7xl mx-auto px-4 mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-6 md:gap-0">
         <div>
           <h1 className="text-2xl md:text-3xl font-semibold text-[#0B0B0B]">
-            Popular <span className="text-[#C9A24D]">Products</span>
+            {props.tag} <span className="text-[#C9A24D]">Products</span>
           </h1>
           <p className="text-sm text-[#8E8E8E] mt-1">
             Do not miss the offer

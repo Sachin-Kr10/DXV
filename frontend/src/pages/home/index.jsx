@@ -6,7 +6,8 @@ import { CiDeliveryTruck } from "react-icons/ci";
 import AdsBannerSlider from '../../components/adsbannerslider';
 import PopularCategorySlider from '../../components/popularcategoryslider';
 import ProductSlider from '../../components/productsslider';
-
+import ProductPopup from '../../components/productpopup';
+import img from '../../assets/img/1.jpg'
 function Home() {
   return (
     <>
@@ -16,12 +17,12 @@ function Home() {
     <div className="homebox mx-auto ">
     <div
       className="
-        flex flex-col gap-4
+        flex flex-row 
         md:flex-row md:items-center md:justify-between
         bg-[#FFFFFF]
         border border-[#C9A24D]
-        rounded-lg
-        px-5 py-5 md:px-10
+        rounded-lg    
+        px-3 py-5 md:px-10
       "
     >
 
@@ -49,8 +50,37 @@ function Home() {
     </section>
     <CategorySlider/>
     <AdsBannerSlider/>
-    <PopularCategorySlider/>
+    <PopularCategorySlider tag="Popular" />
     <ProductSlider/>
+    {/* <ProductPopup></ProductPopup> */}
+    <section className="bg-[#E5E5E5] py-6">
+  <div className="homebox mx-auto">
+    <div
+      className="
+        flex flex-col md:flex-row md:items-center md:justify-between
+        bg-[#FFFFFF]
+        border border-[#C9A24D]
+        rounded-lg
+        h-[80px]
+        overflow-hidden
+      "
+    >
+      <img
+        src={img}
+        alt=""
+        className="
+          w-full h-full
+          object-fill
+          rounded-lg
+        "
+      />
+    </div>
+  </div>
+</section>
+
+    <PopularCategorySlider tag="Latest"/>
+    <ProductSlider/>
+
     </>
   )
 }
