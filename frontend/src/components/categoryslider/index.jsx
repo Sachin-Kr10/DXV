@@ -15,6 +15,10 @@ const categories = [
   { id: 6, name: "Gaming", image: img1 },
   { id: 7, name: "Bags", image: img1 },
   { id: 8, name: "Fashion", image: img1 },
+  { id: 8, name: "Fashion", image: img1 },
+  { id: 8, name: "Fashion", image: img1 },
+  { id: 8, name: "Fashion", image: img1 },
+  { id: 8, name: "Fashion", image: img1 },
 ];
 
 const CategorySlider = () => {
@@ -40,7 +44,7 @@ const CategorySlider = () => {
         </div>
       </div>
 
-      <div className="max-w-8xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-4">
         <Swiper
           slidesPerView="auto"
           spaceBetween={1}
@@ -56,7 +60,7 @@ const CategorySlider = () => {
           {categories.map((cat) => (
             <SwiperSlide
               key={cat.id}
-              className="!w-[130px] sm:!w-[150px] md:!w-[170px]"
+              className="!w-[125px] sm:!w-[135px] md:!w-[138px]"
             >
               <div className="group flex flex-col items-center">
      
@@ -65,11 +69,11 @@ const CategorySlider = () => {
                     w-25 h-25 md:w-28 md:h-28
                     rounded-full
                     overflow-hidden
-                    border border-[#E5E5E5]
+                    border-2 border-[#E5E5E5]
                     bg-white
                     flex items-center justify-center
                     transition-all duration-300
-                    group-hover:scale-105
+                    group-hover:scale-105 
                     group-hover:shadow-[0_12px_30px_rgba(201,222,77,0.35)]
                     group-hover:border-[#C9A24D]
                   "

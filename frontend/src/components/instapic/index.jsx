@@ -33,16 +33,16 @@ const themes = [
   "bg-gradient-to-br from-[#ECFDF5] to-[#D1FAE5]",
 ];
 
-const BrandSlider = () => {
+const InstaPic = () => {
   return (
-    <section className="bg-[#F7F7F7] py-12">
+    <section className="bg-[#F7F7F7] pb-6 ">
       <div className="max-w-7xl mx-auto px-4 mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl md:text-3xl font-semibold tracking-wide text-[#0B0B0B]">
-            Brand <span className="text-[#C9A24D]">Store</span>
+            Follow Us On <span className="text-[#C9A24D]">Instagram</span>
           </h1>
           <p className="text-sm text-[#8E8E8E] mt-1">
-            Curated premium brands for modern fashion
+            Premium brands for premium people
           </p>
         </div>
 
@@ -84,24 +84,19 @@ const BrandSlider = () => {
                   ${themes[i % themes.length]}
                   border-2 border-[#E5E5E5]
                   rounded-xl
-                  p-4
+                  p-0.5
                   flex flex-col items-center justify-center
                   transition-all duration-300
                   hover:border-[#C9A24D]
                   hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)]
                 `}
               >
-                <div className="w-35 h-25 flex items-center justify-center mb-3">
                   <img
                     src={brand.logo}
                     alt={brand.name}
-                    className="max-w-full max-h-full grayscale group-hover:grayscale-0 transition duration-300"
+                    className="max-w-full max-h-full rounded-xl transition duration-300 h-[150px]"
                   />
-                </div>
-
-                <p className="text-xs text-center tracking-wide text-[#1A1A1A] font-medium">
-                  {brand.name}
-                </p>
+                
               </div>
             </SwiperSlide>
           ))}
@@ -111,4 +106,4 @@ const BrandSlider = () => {
   );
 };
 
-export default BrandSlider;
+export default InstaPic;

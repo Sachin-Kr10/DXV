@@ -6,7 +6,10 @@ import { CiDeliveryTruck } from "react-icons/ci";
 import AdsBannerSlider from '../../components/adsbannerslider';
 import PopularCategorySlider from '../../components/popularcategoryslider';
 import ProductSlider from '../../components/productsslider';
+import InstaPic from '../../components/instapic';
 import ProductPopup from '../../components/productpopup';
+
+
 import img from '../../assets/img/1.jpg'
 function Home() {
   return (
@@ -49,11 +52,11 @@ function Home() {
     </div>
     </section>
     <CategorySlider/>
-    <AdsBannerSlider/>
+    <AdsBannerSlider slide={3}/>
     <PopularCategorySlider tag="Popular" />
     <ProductSlider/>
     {/* <ProductPopup></ProductPopup> */}
-    <section className="bg-[#E5E5E5] py-6">
+    <section className="bg-[#E5E5E5] py-8">
   <div className="homebox mx-auto">
     <div
       className="
@@ -61,7 +64,7 @@ function Home() {
         bg-[#FFFFFF]
         border border-[#C9A24D]
         rounded-lg
-        h-[80px]
+        h-[120px]
         overflow-hidden
       "
     >
@@ -80,7 +83,10 @@ function Home() {
 
     <PopularCategorySlider tag="Latest"/>
     <ProductSlider/>
-
+    <AdsBannerSlider slide={2}/>
+    <PopularCategorySlider tag="Featured"/>
+    <ProductSlider/>
+    <InstaPic/>
     </>
   )
 }

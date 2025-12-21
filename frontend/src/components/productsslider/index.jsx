@@ -18,9 +18,9 @@ const products = Array.from({ length: 12 }).map((_, i) => ({
 function ProductSlider() {
   return (
     <section className="bg-[#F7F7F7] ">
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-4 pb-15">
         <Swiper
-          spaceBetween={24}
+          spaceBetween={40}
           freeMode
           grabCursor
           modules={[FreeMode, Navigation]}

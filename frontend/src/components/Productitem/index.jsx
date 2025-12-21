@@ -5,9 +5,10 @@ import { FaOpencart } from "react-icons/fa";
 
 function ProductItem({ product }) {
   const [liked, setLiked] = useState(false);
+  const [added, setAdded] = useState(false);
 
   return (
-    <div className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300">
+    <div className="group bg-white  rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300">
 
       <div className="relative aspect-[3/4] sm:aspect-[4/5] bg-[#E5E5E5] overflow-hidden">
 
@@ -83,18 +84,25 @@ function ProductItem({ product }) {
           </span>
         </div>
         <button
-          className="
-            mt-2 w-full flex items-center justify-center gap-2
-            py-2 rounded-full
-            bg-[#0B0B0B] text-white
-            border-2 border-transparent
-            text-xs font-medium
-            transition-all hover:text-[#C9A24D] hover:border-[#C9A24D] active:scale-95
-          "
-        >
-          <FaOpencart size={15}  />
-          Add To Cart
-        </button>
+      onClick={() => setAdded(!added)}
+      className="
+        mt-2 w-full
+        flex items-center justify-center gap-2
+        py-2 rounded-full
+        bg-[#0B0B0B] text-white
+        border-2 border-transparent
+        text-xs font-medium
+        transition-all
+        hover:text-[#C9A24D] hover:border-[#C9A24D]
+        active:scale-95
+      "
+    >
+      {!added && <FaOpencart size={15} />}
+      <span className="inline-block w-[90px] text-center">
+        {added ? "Go To Cart" : "Add To Cart"}
+      </span>
+      {added && <FaOpencart size={15} />}
+    </button>
       </div>
     </div>
   );

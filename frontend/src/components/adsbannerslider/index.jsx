@@ -25,7 +25,7 @@ const adsData = [
   { id: 12, img: img2, title: "Modern Classic" },
 ];
 
-function AdsBannerSlider() {
+function AdsBannerSlider(props) {
   return (
     <section className="bg-[#E5E5E5] py-6">
       <div className="homebox mx-auto px-4">
@@ -47,7 +47,7 @@ function AdsBannerSlider() {
               slidesPerView: 2, // Tablet
             },
             1024: {
-              slidesPerView: 3, // Desktop
+              slidesPerView: props.slide, // Desktop
             },
           }}
           className="pb-6  mySwiper"
