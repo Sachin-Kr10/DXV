@@ -79,7 +79,7 @@ const Logo = () => {
 
 function Header() {
   return (
-    <>    
+  <>
     <header className="sticky top-0 z-50 bg-white border-b border-[#E5E5E5]">
       <div className="hidden md:block bg-[#0B0B0B] text-[#F7F7F7] text-[13px] py-2">
         <div className="container flex justify-between items-center">
@@ -145,7 +145,6 @@ function Header() {
       </div>
 
     </header>
-    <Navigation></Navigation>
     </>
   );
 }

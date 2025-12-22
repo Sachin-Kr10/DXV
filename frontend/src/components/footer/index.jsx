@@ -178,7 +178,7 @@ function Footer() {
             </button>
 
             <label className="flex items-start gap-2 mt-3 text-[11px] text-[#8E8E8E]">
-              <input type="checkbox" className="mt-1" />I agree to the terms and
+              <input type="checkbox" className="mt-1 accent-[#C9A24D]" />I agree to the terms and
               conditions and the privacy policy
             </label>
           </FooterSection>

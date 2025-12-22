@@ -7,18 +7,18 @@ import img2 from "../../assets/img/2.jpg";
 import "swiper/css";
 
 const categories = [
-  { id: 1, name: "Watches", image: img1 },
-  { id: 2, name: "Jewellery", image: img2 },
-  { id: 3, name: "Furniture", image: img1 },
-  { id: 4, name: "Footwear", image: img1 },
-  { id: 5, name: "Handbags", image: img1 },
-  { id: 6, name: "Gaming", image: img1 },
-  { id: 7, name: "Bags", image: img1 },
-  { id: 8, name: "Fashion", image: img1 },
-  { id: 8, name: "Fashion", image: img1 },
-  { id: 8, name: "Fashion", image: img1 },
-  { id: 8, name: "Fashion", image: img1 },
-  { id: 8, name: "Fashion", image: img1 },
+  { id: 1, name: "T-Shirts", image: img1 },
+  { id: 2, name: "Shirts", image: img2 },
+  { id: 3, name: "Jeans", image: img1 },
+  { id: 4, name: "Trousers", image: img1 },
+  { id: 5, name: "Hoodies", image: img1 },
+  { id: 6, name: "Sweatshirts", image: img1 },
+  { id: 7, name: "Jackets", image: img1 },
+  { id: 8, name: "Blazers", image: img1 },
+  { id: 9, name: "Ethnic Wear", image: img1 },
+  { id: 10, name: "Activewear", image: img1 },
+  { id: 11, name: "Shorts", image: img1 },
+  { id: 12, name: "Denim Jackets", image: img1 },
 ];
 
 const CategorySlider = () => {

@@ -2,12 +2,15 @@ import React, { useState } from "react";
 import { FiHeart } from "react-icons/fi";
 import { CgMaximizeAlt } from "react-icons/cg";
 import { FaOpencart } from "react-icons/fa";
+import { Link } from "react-router";
 
 function ProductItem({ product }) {
   const [liked, setLiked] = useState(false);
   const [added, setAdded] = useState(false);
 
   return (
+
+     
     <div className="group bg-white  rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300">
 
       <div className="relative aspect-[3/4] sm:aspect-[4/5] bg-[#E5E5E5] overflow-hidden">
@@ -54,6 +57,7 @@ function ProductItem({ product }) {
           </button>
         </div>
 
+        <Link to="/product">
         <img
           src={product.img1}
           alt=""
@@ -64,6 +68,7 @@ function ProductItem({ product }) {
           alt=""
           className="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
         />
+        </Link>
       </div>
 
       <div className="p-3 sm:p-4">
@@ -99,7 +104,7 @@ function ProductItem({ product }) {
     >
       {!added && <FaOpencart size={15} />}
       <span className="inline-block w-[90px] text-center">
-        {added ? "Go To Cart" : "Add To Cart"}
+        {added ? <Link to="/cart">Go To Cart</Link> : "Add To Cart"}
       </span>
       {added && <FaOpencart size={15} />}
     </button>

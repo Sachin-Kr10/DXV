@@ -1,4 +1,5 @@
 import React from 'react'
+import Navigation from '../../components/header/navigation';
 import ImageSlider from '../../components/imageslider'
 import BrandSlider from '../../components/brandslider'
 import CategorySlider from '../../components/categoryslider';
@@ -8,13 +9,12 @@ import PopularCategorySlider from '../../components/popularcategoryslider';
 import ProductSlider from '../../components/productsslider';
 import InstaPic from '../../components/instapic';
 import ProductPopup from '../../components/productpopup';
-import FooterFeature from '../../components/footerfeatures';
-import Footer from '../../components/footer';
 
 import img from '../../assets/img/1.jpg'
 function Home() {
   return (
     <>
+    <Navigation></Navigation>
     <ImageSlider/>
     <BrandSlider/>
     <section className="bg-[#E5E5E5] py-6 md:py-6">
@@ -88,8 +88,6 @@ function Home() {
     <PopularCategorySlider tag="Featured"/>
     <ProductSlider/>
     <InstaPic/>
-    <FooterFeature/>
-    <Footer/>
     </>
   )
 }
