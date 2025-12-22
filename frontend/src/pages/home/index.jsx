@@ -8,7 +8,8 @@ import PopularCategorySlider from '../../components/popularcategoryslider';
 import ProductSlider from '../../components/productsslider';
 import InstaPic from '../../components/instapic';
 import ProductPopup from '../../components/productpopup';
-
+import FooterFeature from '../../components/footerfeatures';
+import Footer from '../../components/footer';
 
 import img from '../../assets/img/1.jpg'
 function Home() {
@@ -87,6 +88,8 @@ function Home() {
     <PopularCategorySlider tag="Featured"/>
     <ProductSlider/>
     <InstaPic/>
+    <FooterFeature/>
+    <Footer/>
     </>
   )
 }
