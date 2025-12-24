@@ -117,11 +117,13 @@ function Header() {
             </Tooltip>
 
             <Tooltip title="Cart">
+              <Link to="/cart">
               <IconButton size="small">
                 <StyledBadge badgeContent={1}>
                   <FaOpencart size={25} />
                 </StyledBadge>
               </IconButton>
+              </Link>
             </Tooltip>
 
             <Link to="/login" className="lg:hidden">

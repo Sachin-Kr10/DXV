@@ -5,6 +5,7 @@ import ProductDetailPage from './components/productdetail'
 import FooterFeature from './components/footerfeatures'
 import Footer from './components/footer'
 import ScrollToTop from './components/scrolltotop'
+import Cart from './components/cart'
 import { Routes,Route } from 'react-router'
 function App() {
 
@@ -15,6 +16,7 @@ function App() {
     <Routes>
       <Route path={"/"} exact={true} element={<Home/>} />
       <Route path={"product"} exact={true} element={<ProductDetailPage/>} />
+      <Route path={"cart"} exact={true} element={<Cart/>} />
     </Routes>
     <FooterFeature/>
     <Footer/>
