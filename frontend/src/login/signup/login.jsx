@@ -13,7 +13,7 @@ export default function Login({ setView }) {
         Sign in to your account
       </h2>
 
-      {/* Email */}
+      
       <input
         type="email"
         placeholder="Email address"
