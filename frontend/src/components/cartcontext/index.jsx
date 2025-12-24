@@ -27,6 +27,7 @@ export function CartProvider({ children }) {
         ...prev,
         {
           id: product.id,
+          brand: product.brand,
           title: product.title,
           price: product.price,
           mrp: product.mrp,
@@ -39,7 +40,6 @@ export function CartProvider({ children }) {
     });
   };
 
-  // QTY CONTROLS
   const increaseQty = (index) => {
     setCart((prev) =>
       prev.map((item, i) =>
@@ -58,12 +58,10 @@ export function CartProvider({ children }) {
     );
   };
 
-  // REMOVE
   const removeItem = (index) => {
     setCart((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // TOTALS
   const totals = useMemo(() => {
     const subtotal = cart.reduce(
       (sum, item) => sum + item.price * item.qty,

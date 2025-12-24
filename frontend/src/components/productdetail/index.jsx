@@ -8,6 +8,7 @@ export default function ProductDetailPage() {
   /* ================= PRODUCT DATA ================= */
   const product = {
     id: 1,
+    brand: "URBAN EDGE",
     category: "Men · Hoodies",
     title: "Loose Fit Hoodie",
     price: 2499,
