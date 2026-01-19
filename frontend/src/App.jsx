@@ -8,7 +8,7 @@ import Footer from './components/footer'
 import ScrollToTop from './components/scrolltotop'
 import Cart from './components/cart'
 import Auth from './login/signup'
-
+import Checkout from './components/checkout'
 function App() {
 
   return (
@@ -20,6 +20,7 @@ function App() {
       <Route path={"product"} exact={true} element={<ProductDetailPage/>} />
       <Route path={"cart"} exact={true} element={<Cart/>} />
       <Route path={"login"} exact={true} element={<Auth/>} />
+      <Route path={"checkout"} exact={true} element={<Checkout/>} />
     </Routes>
     <FooterFeature/>
     <Footer/>
