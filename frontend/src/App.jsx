@@ -9,21 +9,36 @@ import ScrollToTop from './components/scrolltotop'
 import Cart from './components/cart'
 import Auth from './login/signup'
 import Checkout from './components/checkout'
+import Payment from './components/payment'
+import AdminLayout from './admin/adminlayout'
+
 function App() {
 
   return (
     <>
     <ScrollToTop/>
+
+    <Routes>
+    <Route path="/*" element = {
+    <>  
     <Header></Header>
     <Routes>
-      <Route path={"/"} exact={true} element={<Home/>} />
-      <Route path={"product"} exact={true} element={<ProductDetailPage/>} />
-      <Route path={"cart"} exact={true} element={<Cart/>} />
-      <Route path={"login"} exact={true} element={<Auth/>} />
-      <Route path={"checkout"} exact={true} element={<Checkout/>} />
+      <Route path={"/"} element={<Home/>} />
+      <Route path={"product"} element={<ProductDetailPage/>} />
+      <Route path={"cart"} element={<Cart/>} />
+      <Route path={"login"} element={<Auth/>} />
+      <Route path={"checkout"}  element={<Checkout/>} />
+      <Route path={"payment"} element={<Payment/>} />
+      <Route path={"admin"} element={<Admin/>} />
     </Routes>
     <FooterFeature/>
     <Footer/>
+    </>
+    } />
+
+
+     <Route path="/admin/*" element={<AdminLayout />} />
+    </Routes>
     </>
   )
 }

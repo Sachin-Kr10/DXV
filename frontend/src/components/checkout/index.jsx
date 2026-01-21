@@ -208,13 +208,33 @@ export default function Checkout() {
             <h2 className="font-semibold text-lg mb-4">Your Order</h2>
 
             {cart.map((item, i) => (
-              <div key={i} className="flex justify-between text-sm mb-2">
-                <span>
-                  {item.title} × {item.qty}
-                </span>
-                <span>₹{item.price * item.qty}</span>
-              </div>
-            ))}
+  <div key={i} className="flex items-center justify-between mb-4">
+    <div className="flex items-center gap-3">
+      <img
+        src={item.image}
+        alt={item.title}
+        className="w-12 h-14 object-cover rounded-lg"
+      />
+
+      <div>
+        <p className="text-sm text-[#1A1A1A] leading-tight">
+          {item.title}
+        </p>
+        <p className="text-xs uppercase tracking-widest text-[#C9A24D]">
+          {item.brand}
+        </p>
+        <p className="text-xs text-[#8E8E8E]">
+          Qty {item.qty}
+        </p>
+      </div>
+    </div>
+
+    <span className="text-sm font-medium">
+      ₹{item.price * item.qty}
+    </span>
+  </div>
+))}
+
 
             <div className="border-t pt-3 space-y-2 text-sm">
               <div className="flex justify-between">
