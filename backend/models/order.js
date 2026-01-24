@@ -1,56 +1,112 @@
 const mongoose = require("mongoose");
-
-/* ORDER ITEM SNAPSHOT */
 const orderItemSchema = new mongoose.Schema(
   {
-    productId: mongoose.Schema.Types.ObjectId,
+    productId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+    },
 
-    title: String,
-    brand: String,
+    title: {
+      type: String,
+      required: true,
+    },
 
-    price: Number,
-    qty: Number,
+    brand: {
+      type: String,
+      required: true,
+    },
+
+    image: {
+      type: String,
+      required: true,
+    },
+
+    price: {
+      type: Number,
+      required: true,
+    },
+
+    qty: {
+      type: Number,
+      required: true,
+    },
 
     color: String,
     size: String,
-    image: String,
   },
   { _id: false }
 );
 
 const addressSchema = new mongoose.Schema(
   {
-    name: String,
-    phone: String,
-    country: String,
-    address1: String,
-    address2: String,
-    city: String,
-    state: String,
-    pincode: String,
+    name: { type: String, required: true },
+    phone: { type: String, required: true },
+
+    country: { type: String, required: true },
+    address1: { type: String, required: true },
+    address2: { type: String },
+
+    city: { type: String, required: true },
+    state: { type: String, required: true },
+    pincode: { type: String, required: true },
   },
   { _id: false }
 );
 
 const orderSchema = new mongoose.Schema(
   {
-    userId: mongoose.Schema.Types.ObjectId,
+    orderId: {
+      type: String,
+      required: true,
+      unique: true,
+      index: true,
+    },
 
-    items: [orderItemSchema],
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      index: true,
+    },
 
-    address: [addressSchema],
+    items: {
+      type: [orderItemSchema],
+      required: true,
+    },
 
-    totalAmount: Number,
+    address: {
+      type: addressSchema,
+      required: true,
+    },
 
-    paymentMethod: String,
+    totalAmount: {
+      type: Number,
+      required: true,
+    },
+
+    paymentMethod: {
+      type: String,
+      required: true,
+    },
+
     paymentStatus: {
       type: String,
+      enum: ["pending", "paid", "failed", "refunded"],
       default: "pending",
+      index: true,
     },
 
     orderStatus: {
       type: String,
+      enum: [
+        "placed",
+        "confirmed",
+        "shipped",
+        "delivered",
+        "cancelled",
+        "returned",
+      ],
       default: "placed",
+      index: true,
     },
   },
   { timestamps: true }

@@ -5,7 +5,6 @@ import RelatedProduct from "../relatedproduct";
 import { useCart } from "../cartcontext";
 
 export default function ProductDetailPage() {
-  /* ================= PRODUCT DATA ================= */
   const product = {
     id: 1,
     brand: "URBAN EDGE",

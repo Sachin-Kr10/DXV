@@ -3,6 +3,16 @@ const Category = require("../../models/category");
 
 const router = express.Router();
 
+router.get("/categories", async function (req, res, next) {
+  try {
+    const categories = await Category.find(); 
+    res.json(categories);
+  } catch (err) {
+    next(err);
+  }
+});
+
+
 router.post("/categories", async(req,res,next)=>{
     try{
         const {name , image }= req.body;
@@ -18,9 +28,9 @@ router.post("/categories", async(req,res,next)=>{
     }
 });
 
-router.patch("categories/:id/toggle", async (req,res,next)=>{
+router.patch("/categories/:id/toggle", async (req,res,next)=>{
     try{
-        const cat = await Categories.findById(req.params.id);
+        const cat = await Category.findById(req.params.id);
         cat.isActive = !cat.isActive;
         await cat.save();
         res.json({success : true});

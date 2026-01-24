@@ -22,9 +22,12 @@ const CategorySlider = () => {
 
   },[]);
 
+const [selectedCategory, setSelectedCategory] = useState(null);
+
+
   return (
-    <section className="bg-[#F7F7F7] py-12">
-      <div className="max-w-7xl mx-auto px-4 mb-6 flex items-center justify-between">
+    <section className="bg-[#F7F7F7] py-14">
+      <div className="max-w-7xl mx-auto px-4 mb-2 flex items-center justify-between">
         <div>
           <h1 className="text-2xl md:text-3xl font-semibold text-[#0B0B0B]">
             Shop by <span className="text-[#C9A24D]">Category</span>
@@ -50,7 +53,6 @@ const CategorySlider = () => {
           spaceBetween={1}
           freeMode
           grabCursor
-          
           navigation={{
             prevEl: ".category-prev",
             nextEl: ".category-next",
@@ -62,21 +64,21 @@ const CategorySlider = () => {
               key={cat._id}
               className="!w-[125px] sm:!w-[135px] md:!w-[138px]"
             >
-              <div className="group flex flex-col items-center">
-     
+              <div className="group flex flex-col items-center mt-6">
                 <div
-                  className="
-                    w-25 h-25 md:w-28 md:h-28
-                    rounded-full
-                    overflow-hidden
-                    border-2 border-[#E5E5E5]
-                    bg-white
-                    flex items-center justify-center
-                    transition-all duration-300
-                    group-hover:scale-105 
-                    group-hover:shadow-[0_12px_30px_rgba(201,222,77,0.35)]
-                    group-hover:border-[#C9A24D]
-                  "
+                  onClick={() => setSelectedCategory(cat._id)}
+                  className={`
+                  w-25 h-25 md:w-28 md:h-28
+                  rounded-full
+                  overflow-hidden
+                 bg-white
+                  flex items-center justify-center
+                  transition-all duration-300 cursor-pointer
+                 ${
+                  selectedCategory === cat._id
+                  ? "border-2 border-[#C9A24D] scale-105 shadow-[0_12px_30px_rgba(201,162,77,0.35)]"
+                  : "border-2 border-[#E5E5E5] group-hover:scale-105 group-hover:border-[#C9A24D]"
+                 }`}
                 >
                   <img
                     src={cat.image}
@@ -89,7 +91,10 @@ const CategorySlider = () => {
                   />
                 </div>
 
-                <p className="mt-3 text-xs md:text-sm font-medium tracking-wide text-[#1A1A1A]">
+                <p className={`mt-3 text-xs md:text-sm font-medium tracking-wide ${
+                 selectedCategory === cat._id
+                  ? "text-[#C9A24D]"
+                  : "text-[#1A1A1A]"}`}>
                   {cat.name}
                 </p>
               </div>
