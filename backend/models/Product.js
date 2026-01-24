@@ -5,7 +5,7 @@ const sizeSchema = new mongoose.Schema(
     size: {
       type: String,
       required: true,
-
+      trim : true,
     },
     stock: {
       type: Number,
@@ -21,11 +21,14 @@ const variantSchema = new mongoose.Schema(
     colorName: {
       type: String,
       required: true,
+      lowercase : true,
+      trim:true,
     },
 
     colorHex: {
       type: String,
       required: true,
+      uppercase:true,
     },
 
     images: {
@@ -52,32 +55,37 @@ const productSchema = new mongoose.Schema(
     slug: {
       type: String,
       required: true,
+      unique : true,
       lowercase: true,
       index: true,
+    },
+    
+    mainCategory:{
+      type: String,
+      required : true,
+      index : true,
+      lowercase: true,
     },
 
     brand: {
       type: String,
       required: true,
       index: true,
+      lowercase: true,
     },
 
-    mainCategory: {
+    prodCategory: {
       type: String, 
       required: true,
       index: true,
-    },
-
-    category: {
-      type: String, 
-      required: true,
-      index: true,
+      lowercase : true,
     },
 
     subCategory: {
       type: String, 
       default: null,
       index: true,
+      lowercase: true,
     },
 
     price: {
@@ -111,12 +119,12 @@ const productSchema = new mongoose.Schema(
 
 productSchema.index({
   mainCategory: 1,
-  category: 1,
-  subCategory: 1,
   brand: 1,
+  prodCategory: 1,
+  subCategory: 1,
   isActive: 1,
+  price: 1
 });
 
-productSchema.index({ price: 1 });
 
 module.exports = mongoose.model("Product", productSchema);

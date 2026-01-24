@@ -17,7 +17,6 @@ const Dashboard = () => {
 
   const [recentOrders, setRecentOrders] = useState([]);
 
-  /* ================= LOAD DASHBOARD DATA ================= */
   const loadDashboard = () => {
     axios
       .get("http://localhost:3000/api/admin/dashboard")
@@ -34,7 +33,6 @@ const Dashboard = () => {
 
   return (
     <div>
-      {/* HEADER */}
       <div className="mb-6">
         <h1 className="text-xl font-semibold text-[#1A1A1A]">
           Dashboard
@@ -44,7 +42,6 @@ const Dashboard = () => {
         </p>
       </div>
 
-      {/* STATS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <StatCard
           icon={<FiShoppingBag />}
@@ -68,7 +65,6 @@ const Dashboard = () => {
         />
       </div>
 
-      {/* RECENT ORDERS */}
       <div className="bg-white rounded-xl border overflow-hidden">
         <div className="p-4 border-b">
           <h2 className="font-medium">Recent Orders</h2>
@@ -112,7 +108,6 @@ const Dashboard = () => {
   );
 };
 
-/* ================= SMALL CARD ================= */
 const StatCard = ({ icon, label, value }) => {
   return (
     <div className="bg-white rounded-xl border p-5 flex items-center gap-4">

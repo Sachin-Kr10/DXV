@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router";
-import { useCart } from "../cartcontext";
+import { useCart } from "../context/CartContext";
 
 export default function Payment() {
   const { state } = useLocation();

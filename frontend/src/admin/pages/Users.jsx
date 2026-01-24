@@ -5,7 +5,6 @@ import { FiUserX, FiUserCheck } from "react-icons/fi";
 const Users = () => {
   const [users, setUsers] = useState([]);
 
-  /* ================= LOAD USERS ================= */
   const loadUsers = () => {
     axios
       .get("http://localhost:3000/api/admin/users")
@@ -17,7 +16,6 @@ const Users = () => {
     loadUsers();
   }, []);
 
-  /* ================= TOGGLE BLOCK ================= */
   const toggleBlock = (id) => {
     axios
       .patch(`http://localhost:3000/api/admin/users/${id}/toggle`)
@@ -27,7 +25,6 @@ const Users = () => {
 
   return (
     <div>
-      {/* HEADER */}
       <div className="mb-6">
         <h1 className="text-xl font-semibold text-[#1A1A1A]">
           Users
@@ -37,7 +34,6 @@ const Users = () => {
         </p>
       </div>
 
-      {/* TABLE */}
       <div className="bg-white rounded-xl border overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-[#F7F7F7]">

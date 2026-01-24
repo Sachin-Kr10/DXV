@@ -22,7 +22,6 @@ const Products = () => {
     ],
   });
 
-  /* ================= LOAD ================= */
   const loadData = () => {
     axios.get("http://localhost:3000/api/admin/products")
       .then(res => setProducts(res.data));
@@ -38,7 +37,6 @@ const Products = () => {
     loadData();
   }, []);
 
-  /* ================= OPEN ================= */
   const openAdd = () => {
     setEditId(null);
     setForm({

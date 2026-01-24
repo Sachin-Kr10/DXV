@@ -58,7 +58,6 @@ export default function Login({ setView }) {
         <span className="flex-1 h-px bg-[#E5E5E5]" />
       </div>
 
-      {/* Google */}
       <button
         className="w-full py-3 rounded-lg bg-[#FFFFFF] border border-[#E5E5E5]
         flex items-center justify-center gap-2 text-[#1A1A1A]

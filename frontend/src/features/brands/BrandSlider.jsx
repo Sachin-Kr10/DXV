@@ -5,8 +5,8 @@ import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { IoClose } from "react-icons/io5";
 import "swiper/css";
 
-import img1 from "../../assets/img/1.jpg";
-import img2 from "../../assets/img/2.jpg";
+import img1 from "../../assets/images/1.jpg";
+import img2 from "../../assets/images/2.jpg";
 
 const brands = [
   { id: 1, name: "AUREX", logo: img1 },

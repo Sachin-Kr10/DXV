@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { FaOpencart, FaStar } from "react-icons/fa";
 import { Link } from "react-router";
-import RelatedProduct from "../relatedproduct";
-import { useCart } from "../cartcontext";
+import RelatedProduct from "../features/product/RelatedProducts";
+import { useCart } from "../context/CartContext";
 
 export default function ProductDetailPage() {
   const product = {

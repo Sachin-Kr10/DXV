@@ -1,4 +1,5 @@
-import Navigation from "../components/Navigation";
+import React, { useState} from "react";
+import MainCategory from "../features/category/MainCategory";
 import ImageSlider from "../features/slider/ImageSlider";
 import BrandSlider from "../features/brands/BrandSlider";
 import AdsBannerSlider from "../features/slider/AdsBannerSlider";
@@ -10,15 +11,23 @@ import ProductSlider from "../features/product/ProductSlider";
 
 
 import { CiDeliveryTruck } from "react-icons/ci";
-import ProductPopup from "../../components/productpopup";
-import img from "../../assets/img/1.jpg";
+//import ProductPopup from "../../components/productpopup";
+import img from "../assets/images/1.jpg";
 
 function Home() {
+  const [filters, setFilters] = useState({
+    mainCategory: "all",
+    brand: null,
+    prodCategory: null,
+    subCategory: null,
+  });
   return (
     <>
-      <Navigation />
+      <MainCategory filters={filters} setFilters={setFilters} />
+
       <ImageSlider />
-      <BrandSlider />
+      <BrandSlider filters={filters} setFilters={setFilters} />
+
       <section className="bg-[#E5E5E5] py-6 md:py-6">
         <div className="homebox mx-auto ">
           <div
@@ -53,7 +62,8 @@ function Home() {
           </div>
         </div>
       </section>
-      <CategorySlider />
+      <CategorySlider filters={filters} setFilters={setFilters} />
+
       <AdsBannerSlider slide={3} />
       <SubCategories tag="Popular" />
       <ProductSlider />
@@ -83,8 +93,10 @@ function Home() {
         </div>
       </section>
 
-      <SubCategories tag="Latest" />
-      <ProductSlider />
+      <SubCategories tag="Popular" filters={filters} setFilters={setFilters} />
+
+      <ProductSlider filters={filters} />
+
       <AdsBannerSlider slide={2} />
       <SubCategories tag="Featured" />
       <ProductSlider />

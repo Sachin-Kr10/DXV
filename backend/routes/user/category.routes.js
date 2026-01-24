@@ -1,65 +1,56 @@
 const express = require("express");
-const Category = require("../../models/Category");
-
 const router = express.Router();
 
-router.get("/categories/main", async (req,res,next)=>{
-    try{
-        const categories = await Category.find({
-            level:1,
-            isActive:true
-        },
-        {
-            name : 1,
-            slug:1
-        }).sort({name:1});
+const MainCategory = require("../../models/MainCategory");
+const Category = require("../../models/ProdCategory");
+const SubCategory = require("../../models/SubCategory");
 
-        res.json(categories);
-    }
-    catch(err){
-        next(err);
-    }
-})
+router.get("/", async (req, res) => {
+  try {
+    const { mainCategory, category, brand } = req.query;
 
-router.get("/categories", async (req,res,next)=>{
-    try{
-        const filter ={level :2,isActive :true};
-        if(req.query.main){
-            filter.parent = req.query.main;
-        }
-        const categories = await Category.find(
-            filter,{
-                name :1,
-                slug:1,
-                parent:1
-            }
-        ).sort({name:1});
+    const mainCategories = await MainCategory.find({ isActive: true })
+      .sort({ sortOrder: 1 })
+      .select("name slug");
 
-        res.json(categories);
-    }
-    catch(err){
-        next(err);
-    }
-})
+    let categories = [];
 
-router.get("/categories/sub", async (req,res,next)=>{
-    try{
-        if(!req.query.category){
-            return res.json([]);
-        }
-        const subCategories = await Category.find({
-            level : 3,
-            parent : req.query.category,
-            isActive :true,
-        },{
-            name :1,
-            slug:1,parent:1
-        }).sort({name:1});
-        res.json(subCategories);
+    if (mainCategory) {
+      categories = await Category.find({
+        mainCategory,
+        isActive: true,
+        ...(brand && { brands: brand }),
+      })
+        .sort({ sortOrder: 1 })
+        .select("name slug image");
     }
-    catch(err){
-        next(err);
+
+    let subCategories = [];
+    if (mainCategory && category) {
+      subCategories = await SubCategory.find({
+        mainCategory,
+        category,
+        isActive: true,
+        ...(brand && { brands: brand }),
+      })
+        .sort({ sortOrder: 1 })
+        .select("name slug image");
     }
-})
+
+    res.status(200).json({
+      success: true,
+      data: {
+        mainCategories,
+        categories,
+        subCategories,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch category data",
+    });
+  }
+});
 
 module.exports = router;

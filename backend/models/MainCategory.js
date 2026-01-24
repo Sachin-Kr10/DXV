@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const brandSchema = new mongoose.Schema(
+const mainCategorySchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -19,12 +19,6 @@ const brandSchema = new mongoose.Schema(
       index: true,
     },
 
-    mainCategories: {
-      type: [String], 
-      required: true,
-      index: true,
-    },
-
     isActive: {
       type: Boolean,
       default: true,
@@ -40,7 +34,6 @@ const brandSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-brandSchema.index({ isActive: 1, sortOrder: 1 });
-brandSchema.index({ mainCategories: 1, isActive: 1 });
+mainCategorySchema.index({ isActive: 1, sortOrder: 1 });
 
-module.exports = mongoose.model("Brand", brandSchema);
+module.exports = mongoose.model("MainCategory", mainCategorySchema);

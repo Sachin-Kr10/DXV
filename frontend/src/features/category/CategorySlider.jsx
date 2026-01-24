@@ -4,22 +4,20 @@ import { Autoplay, FreeMode, Navigation } from "swiper/modules";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import "swiper/css";
 import { useEffect,useState } from "react";
-import axios from "axios"
+import api from "../../api/api"
 
 
-const CategorySlider = () => {
+function CategorySlider() {
 
   const [categories,setCategories]= useState([]);
   useEffect(() => {
-    axios.get("http://localhost:3000/api/categories")
+    api.get("/categories")
     .then((res) => {
       setCategories(res.data);
     })
     .catch((error) => {
       console.log("failed to lead ctegories", error);
     });
-
-
   },[]);
 
 const [selectedCategory, setSelectedCategory] = useState(null);

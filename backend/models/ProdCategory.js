@@ -1,13 +1,12 @@
 const mongoose = require("mongoose");
 
-const brandSchema = new mongoose.Schema(
+const prodcategorySchema = new mongoose.Schema(
   {
     name: {
       type: String,
       required: true,
       trim: true,
       lowercase: true,
-      unique: true,
     },
 
     slug: {
@@ -15,14 +14,25 @@ const brandSchema = new mongoose.Schema(
       required: true,
       trim: true,
       lowercase: true,
-      unique: true,
       index: true,
     },
 
-    mainCategories: {
-      type: [String], 
+    mainCategory: {
+      type: String, 
       required: true,
       index: true,
+      lowercase: true,
+    },
+
+    brands: {
+      type: [String],
+      required: true,
+      index: true,
+    },
+
+    image: {
+      type: String, // Cloudinary URL
+      required: true,
     },
 
     isActive: {
@@ -40,7 +50,11 @@ const brandSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-brandSchema.index({ isActive: 1, sortOrder: 1 });
-brandSchema.index({ mainCategories: 1, isActive: 1 });
+prodcategorySchema.index(
+  { name: 1, mainCategory: 1 },
+  { unique: true }
+);
 
-module.exports = mongoose.model("Brand", brandSchema);
+prodcategorySchema.index({ mainCategory: 1, brands: 1, isActive: 1 });
+
+module.exports = mongoose.model("ProdCategory", prodcategorySchema);

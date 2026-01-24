@@ -5,7 +5,6 @@ import { FiEye } from "react-icons/fi";
 const Orders = () => {
   const [orders, setOrders] = useState([]);
 
-  /* ================= LOAD ORDERS ================= */
   const loadOrders = () => {
     axios
       .get("http://localhost:3000/api/admin/orders")
@@ -17,7 +16,6 @@ const Orders = () => {
     loadOrders();
   }, []);
 
-  /* ================= UPDATE STATUS ================= */
   const updateStatus = (id, status) => {
     axios
       .patch(`http://localhost:3000/api/admin/orders/${id}/status`, {

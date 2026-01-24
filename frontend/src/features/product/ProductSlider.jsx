@@ -2,7 +2,7 @@ import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Navigation } from "swiper/modules";
 import "swiper/css";
-import ProductItem from "../Productitem";
+import ProductItem from "./ProductCard";
 // Dummy products
 const products = Array.from({ length: 12 }).map((_, i) => ({
   id: i + 1,
@@ -11,8 +11,8 @@ const products = Array.from({ length: 12 }).map((_, i) => ({
   price: 1000,
   discountedPrice: 800,
   discount: 20,
-  img1: "/src/assets/img/1.jpg",
-  img2: "/src/assets/img/2.jpg",
+  img1: "/src/assets/images/1.jpg",
+  img2: "/src/assets/images/2.jpg",
 }));
 
 function ProductSlider() {

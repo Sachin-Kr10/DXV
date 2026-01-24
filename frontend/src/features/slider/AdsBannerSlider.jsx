@@ -4,11 +4,11 @@ import { Autoplay, Navigation } from "swiper/modules";
 import { Link } from "react-router";
 import "swiper/css";
 import "swiper/css/navigation";
-import BannerBox from "../bannerbox";
+import BannerBox from "../../components/BannerBox";
 
-// Dummy Images
-import img1 from "../../assets/img/1.jpg";
-import img2 from "../../assets/img/2.jpg";
+
+import img1 from "../../assets/images/1.jpg";
+import img2 from "../../assets/images/2.jpg";
 
 const adsData = [
   { id: 1, img: img1, title: "Luxury Leather" },

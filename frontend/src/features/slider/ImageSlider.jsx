@@ -5,9 +5,9 @@ import { Navigation, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 
-import img1 from "../../assets/img/1.jpg";
-import img2 from "../../assets/img/2.jpg";
-import img3 from "../../assets/img/3.png";
+import img1 from "../../assets/images/1.jpg";
+import img2 from "../../assets/images/2.jpg";
+import img3 from "../../assets/images/3.png";
 
 const slides = [
   { id: 1, img: img1, title: "Winter Collection" },

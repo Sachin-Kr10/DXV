@@ -1,4 +1,4 @@
-import "./styles/App.css";
+import "../styles/App.css";
 import { Routes, Route } from "react-router";
 import ScrollToTop from "../components/ScrollToTop";
 
@@ -11,8 +11,8 @@ import ProductDetail from "../pages/ProductDetail";
 import Cart from "../pages/Cart";
 import Checkout from "../pages/Checkout";
 import Payment from "../pages/Payment";
-
-import AdminLayout from "../layouts/AdminLayout";
+import Auth from "../features/auth/AuthModel";
+import Admin from "../admin/Admin";
 
 function App() {
   return (
@@ -28,17 +28,18 @@ function App() {
               <Routes>
                 <Route path={"/"} element={<Home />} />
                 <Route path={"product"} element={<ProductDetail />} />
-                <Route path={"cart"} element={<Cart />} />
+                <Route path={"cart"} element={<Cart />}/>
                 <Route path={"login"} element={<Auth />} />
                 <Route path={"checkout"} element={<Checkout />} />
                 <Route path={"payment"} element={<Payment />} />
+               
               </Routes>
               <FooterFeatures />
               <Footer />
             </>
           }
         />
-        <Route path="/admin/*" element={<AdminLayout />} />
+        <Route path="/admin/*" element={<Admin/>} />
       </Routes>
     </>
   );

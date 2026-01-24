@@ -1,6 +1,5 @@
 import { Link, NavigationType } from "react-router";
-import Search from "../search";
-import Navigation from "./navigation";
+import Search from "./Search";
 import Badge from "@mui/material/Badge";
 import { styled } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
