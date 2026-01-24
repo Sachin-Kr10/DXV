@@ -5,6 +5,7 @@ const sizeSchema = new mongoose.Schema(
     size: {
       type: String,
       required: true,
+
     },
     stock: {
       type: Number,
