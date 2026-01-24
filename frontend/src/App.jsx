@@ -10,7 +10,7 @@ import Cart from './components/cart'
 import Auth from './login/signup'
 import Checkout from './components/checkout'
 import Payment from './components/payment'
-// import AdminLayout from './admin/adminlayout'
+import AdminLayout from './admin/adminlayout'
 
 function App() {
 
@@ -29,7 +29,6 @@ function App() {
       <Route path={"login"} element={<Auth/>} />
       <Route path={"checkout"}  element={<Checkout/>} />
       <Route path={"payment"} element={<Payment/>} />
-      {/* <Route path={"admin"} element={<Admin/>} /> */}
     </Routes>
     <FooterFeature/>
     <Footer/>
@@ -37,7 +36,7 @@ function App() {
     } />
 
 
-     {/* <Route path="/admin/*" element={<AdminLayout />} /> */}
+     <Route path="/admin/*" element={<AdminLayout />} />
     </Routes>
     </>
   )

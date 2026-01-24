@@ -2,26 +2,26 @@ import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, FreeMode, Navigation } from "swiper/modules";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
-import img1 from "../../assets/img/1.jpg";
-import img2 from "../../assets/img/2.jpg";
 import "swiper/css";
+import { useEffect,useState } from "react";
+import axios from "axios"
 
-const categories = [
-  { id: 1, name: "T-Shirts", image: img1 },
-  { id: 2, name: "Shirts", image: img2 },
-  { id: 3, name: "Jeans", image: img1 },
-  { id: 4, name: "Trousers", image: img1 },
-  { id: 5, name: "Hoodies", image: img1 },
-  { id: 6, name: "Sweatshirts", image: img1 },
-  { id: 7, name: "Jackets", image: img1 },
-  { id: 8, name: "Blazers", image: img1 },
-  { id: 9, name: "Ethnic Wear", image: img1 },
-  { id: 10, name: "Activewear", image: img1 },
-  { id: 11, name: "Shorts", image: img1 },
-  { id: 12, name: "Denim Jackets", image: img1 },
-];
 
 const CategorySlider = () => {
+
+  const [categories,setCategories]= useState([]);
+  useEffect(() => {
+    axios.get("http://localhost:3000/api/categories")
+    .then((res) => {
+      setCategories(res.data);
+    })
+    .catch((error) => {
+      console.log("failed to lead ctegories", error);
+    });
+
+
+  },[]);
+
   return (
     <section className="bg-[#F7F7F7] py-12">
       <div className="max-w-7xl mx-auto px-4 mb-6 flex items-center justify-between">
@@ -59,7 +59,7 @@ const CategorySlider = () => {
         >
           {categories.map((cat) => (
             <SwiperSlide
-              key={cat.id}
+              key={cat._id}
               className="!w-[125px] sm:!w-[135px] md:!w-[138px]"
             >
               <div className="group flex flex-col items-center">
