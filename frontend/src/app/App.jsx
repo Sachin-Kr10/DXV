@@ -27,11 +27,11 @@ function App() {
               <Header />
               <Routes>
                 <Route path={"/"} element={<Home />} />
-                <Route path={"product"} element={<ProductDetail />} />
-                <Route path={"cart"} element={<Cart />}/>
-                <Route path={"login"} element={<Auth />} />
-                <Route path={"checkout"} element={<Checkout />} />
-                <Route path={"payment"} element={<Payment />} />
+                <Route path={"/product/:slug"} element={<ProductDetail />} />
+                <Route path={"/cart"} element={<Cart />}/>
+                <Route path={"/login"} element={<Auth />} />
+                <Route path={"/checkout"} element={<Checkout />} />
+                <Route path={"/payment"} element={<Payment />} />
                
               </Routes>
               <FooterFeatures />

@@ -57,7 +57,7 @@ function ProductItem({ product }) {
           </button>
         </div>
 
-        <Link to="/product">
+        <Link to={`/product/${product.slug}`}>
         <img
           src={product.img1}
           alt=""

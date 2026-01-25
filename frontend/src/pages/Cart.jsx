@@ -3,17 +3,11 @@ import { FaTrash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router";
 
 export default function Cart() {
-  const {
-    cart,
-    increaseQty,
-    decreaseQty,
-    removeItem,
-    totals,
-  } = useCart();
+  const { cart, increaseQty, decreaseQty, removeItem, totals } = useCart();
 
   const navigate = useNavigate();
 
-  const SHIPPING_CHARGE = 50;
+  const SHIPPING_CHARGE = cart.length > 0 ? 50 : 0;
 
   const estimatedDate = new Date();
   estimatedDate.setDate(estimatedDate.getDate() + 7);
@@ -45,7 +39,9 @@ export default function Cart() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
-            <h1 className="text-2xl md:text-3xl font-semibold text-[#0B0B0B]">Your <span className="text-[#C9A24D]">Cart</span></h1>
+            <h1 className="text-2xl md:text-3xl font-semibold text-[#0B0B0B]">
+              Your <span className="text-[#C9A24D]">Cart</span>
+            </h1>
 
             {cart.length === 0 && (
               <p className="text-[#8E8E8E]">Your cart is empty.</p>
@@ -113,13 +109,18 @@ export default function Cart() {
 
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <span>Subtotal</span>
-                  <span>₹{totals.subtotal}</span>
+                  <span>Total MRP</span>
+                  <span>₹{totals.totalMrp}</span>
                 </div>
 
                 <div className="flex justify-between">
                   <span>Discount</span>
                   <span className="text-[#C9A24D]">−₹{totals.discount}</span>
+                </div>
+
+                <div className="flex justify-between">
+                  <span>Subtotal</span>
+                  <span>₹{totals.subtotal}</span>
                 </div>
 
                 <div className="flex justify-between">
@@ -140,7 +141,10 @@ export default function Cart() {
                 </span>
               </p>
 
-              <button className="mt-6 w-full py-3 rounded-full bg-[#0B0B0B] text-white hover:text-[#C9A24D] transition" onClick={() => navigate("/checkout")}>
+              <button
+                className="mt-6 w-full py-3 rounded-full bg-[#0B0B0B] text-white hover:text-[#C9A24D] transition"
+                onClick={() => navigate("/checkout")}
+              >
                 Proceed to Checkout
               </button>
             </div>

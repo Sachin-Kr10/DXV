@@ -39,6 +39,7 @@ function ProductSlider({ filters, tag }) {
 
           return {
             _id: p._id,
+            slug:p.slug,
             title: p.title,
             brand: p.brand,
             price,

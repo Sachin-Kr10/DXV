@@ -1,52 +1,82 @@
-import { createContext, useContext, useState, useMemo } from "react";
+import { createContext, useContext, useState, useMemo,useEffect } from "react";
 
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(() => {
+  const saved = localStorage.getItem("cart");
+  return saved ? JSON.parse(saved) : [];
+});
+
+useEffect(() => {
+  localStorage.setItem("cart", JSON.stringify(cart));
+}, [cart]);
+
 
   
   const addToCart = (product, options) => {
-    setCart((prev) => {
-      const existing = prev.find(
-        (item) =>
-          item.id === product.id &&
-          item.color === options.color &&
-          item.size === options.size
+  const variant = product.variants.find(
+    (v) => v.colorName === options.color
+  );
+
+  if (!variant) return;
+
+  const image = variant.images[0];
+
+  setCart((prev) => {
+    const existing = prev.find(
+      (item) =>
+        item.productId === product._id &&
+        item.color === options.color &&
+        item.size === options.size
+    );
+
+    if (existing) {
+      return prev.map((item) =>
+        item === existing
+          ? { ...item, qty: item.qty + options.qty }
+          : item
       );
+    }
 
-      if (existing) {
-        return prev.map((item) =>
-          item === existing
-            ? { ...item, qty: item.qty + options.qty }
-            : item
-        );
-      }
+    return [
+      ...prev,
+      {
+        productId: product._id,
+        slug: product.slug,
 
-      return [
-        ...prev,
-        {
-          id: product.id,
-          brand: product.brand,
-          title: product.title,
-          price: product.price,
-          mrp: product.mrp,
-          image: product.variants[options.color].images[0],
-          color: options.color,
-          size: options.size,
-          qty: options.qty,
-        },
-      ];
-    });
-  };
+        brand: product.brand,
+        title: product.title,
+
+        price: product.price,
+        mrp: product.mrp,
+
+        image,
+
+        color: options.color,
+        colorHex: variant.colorHex,
+
+        size: options.size,
+        qty: options.qty,
+
+        maxStock:
+          variant.sizes.find((s) => s.size === options.size)
+            ?.stock || 0,
+      },
+    ];
+  });
+};
 
   const increaseQty = (index) => {
-    setCart((prev) =>
-      prev.map((item, i) =>
-        i === index ? { ...item, qty: item.qty + 1 } : item
-      )
-    );
-  };
+  setCart((prev) =>
+    prev.map((item, i) =>
+      i === index && item.qty < item.maxStock
+        ? { ...item, qty: item.qty + 1 }
+        : item
+    )
+  );
+};
+
 
   const decreaseQty = (index) => {
     setCart((prev) =>
@@ -63,21 +93,26 @@ export function CartProvider({ children }) {
   };
 
   const totals = useMemo(() => {
-    const subtotal = cart.reduce(
-      (sum, item) => sum + item.price * item.qty,
-      0
-    );
-    const discount = cart.reduce(
-      (sum, item) => sum + (item.mrp - item.price) * item.qty,
-      0
-    );
+  const subtotal = cart.reduce(
+    (sum, item) => sum + item.price * item.qty,
+    0
+  );
 
-    return {
-      subtotal,
-      discount,
-      total: subtotal,
-    };
-  }, [cart]);
+  const totalMrp = cart.reduce(
+    (sum, item) => sum + item.mrp * item.qty,
+    0
+  );
+
+  const discount = totalMrp - subtotal;
+
+  return {
+    subtotal,
+    totalMrp,
+    discount,
+    total: subtotal,
+  };
+}, [cart]);
+
 
   return (
     <CartContext.Provider

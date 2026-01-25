@@ -5,7 +5,7 @@ const sizeSchema = new mongoose.Schema(
     size: {
       type: String,
       required: true,
-      trim : true,
+      trim: true,
     },
     stock: {
       type: Number,
@@ -13,7 +13,7 @@ const sizeSchema = new mongoose.Schema(
       min: 0,
     },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const variantSchema = new mongoose.Schema(
@@ -21,14 +21,14 @@ const variantSchema = new mongoose.Schema(
     colorName: {
       type: String,
       required: true,
-      lowercase : true,
-      trim:true,
+      lowercase: true,
+      trim: true,
     },
 
     colorHex: {
       type: String,
       required: true,
-      uppercase:true,
+      uppercase: true,
     },
 
     images: {
@@ -41,7 +41,7 @@ const variantSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const productSchema = new mongoose.Schema(
@@ -111,6 +111,44 @@ const productSchema = new mongoose.Schema(
       index: true,
     },
 
+    discount: {
+      type: Number,
+      default: 0,
+      min: 0,
+      max: 100,
+    },
+
+    color: {
+      type: String,
+      required: true,
+      lowercase: true,
+      index: true,
+    },
+
+    design: {
+      type: String,
+      lowercase: true,
+      default: "solid",
+    },
+
+    fit: {
+      type: String,
+      lowercase: true,
+      default: "regular",
+    },
+
+    rating: {
+      type: Number,
+      default: 0,
+      min: 0,
+      max: 5,
+    },
+
+    ratingCount: {
+      type: Number,
+      default: 0,
+    },
+
     description: {
       type: String,
     },
@@ -135,8 +173,14 @@ productSchema.index({
   prodCategory: 1,
   subCategory: 1,
   isActive: 1,
-  price: 1
+  price: 1,
 });
 
+productSchema.pre("save", function (next) {
+  if (this.mrp && this.price) {
+    this.discount = Math.round(((this.mrp - this.price) / this.mrp) * 100);
+  }
+  next();
+});
 
 module.exports = mongoose.model("Product", productSchema);

@@ -1,12 +1,19 @@
 const mongoose = require("mongoose");
 
-/* ---------- Cart Item ---------- */
 const cartItemSchema = new mongoose.Schema(
   {
     productId: {
       type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
       required: true,
       index: true,
+    },
+
+    slug: {
+      type: String,
+      required: true,
+      lowercase: true,
+      trim: true,
     },
 
     title: {
@@ -33,10 +40,22 @@ const cartItemSchema = new mongoose.Schema(
       min: 0,
     },
 
+    mrp: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+
     qty: {
       type: Number,
       required: true,
       min: 1,
+    },
+
+    maxStock: {
+      type: Number,
+      required: true,
+      min: 0,
     },
 
     color: {
@@ -44,6 +63,11 @@ const cartItemSchema = new mongoose.Schema(
       required: true,
       lowercase: true,
       trim: true,
+    },
+
+    colorHex: {
+      type: String,
+      required: true,
     },
 
     size: {
@@ -56,11 +80,11 @@ const cartItemSchema = new mongoose.Schema(
   { _id: false }
 );
 
-/* ---------- Cart Schema ---------- */
 const cartSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
       unique: true,
       index: true,
@@ -70,15 +94,19 @@ const cartSchema = new mongoose.Schema(
       type: [cartItemSchema],
       default: [],
     },
-
-    updatedAt: {
-      type: Date,
-      default: Date.now,
-    },
   },
   { timestamps: true }
 );
 
-cartSchema.index({ userId: 1 });
+
+cartSchema.index(
+  {
+    userId: 1,
+    "items.productId": 1,
+    "items.color": 1,
+    "items.size": 1,
+  },
+  { unique: true, sparse: true }
+);
 
 module.exports = mongoose.model("Cart", cartSchema);
