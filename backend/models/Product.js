@@ -55,15 +55,15 @@ const productSchema = new mongoose.Schema(
     slug: {
       type: String,
       required: true,
-      unique : true,
+      unique: true,
       lowercase: true,
       index: true,
     },
-    
-    mainCategory:{
+
+    mainCategory: {
       type: String,
-      required : true,
-      index : true,
+      required: true,
+      index: true,
       lowercase: true,
     },
 
@@ -75,14 +75,14 @@ const productSchema = new mongoose.Schema(
     },
 
     prodCategory: {
-      type: String, 
+      type: String,
       required: true,
       index: true,
-      lowercase : true,
+      lowercase: true,
     },
 
     subCategory: {
-      type: String, 
+      type: String,
       default: null,
       index: true,
       lowercase: true,
@@ -97,6 +97,18 @@ const productSchema = new mongoose.Schema(
     mrp: {
       type: Number,
       required: true,
+    },
+
+    orderCount: {
+      type: Number,
+      default: 0,
+      index: true,
+    },
+
+    featuredScore: {
+      type: Number,
+      default: 0,
+      index: true,
     },
 
     description: {
@@ -114,7 +126,7 @@ const productSchema = new mongoose.Schema(
       index: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 productSchema.index({

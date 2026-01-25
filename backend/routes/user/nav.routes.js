@@ -22,17 +22,17 @@ router.get("/maincategories", async (req, res) => {
 router.get("/brands", async (req, res) => {
   try {
     const { mainCategory } = req.query;
+    const query = {
+      isActive: true,
+    }; 
 
-    if (!mainCategory || mainCategory === "all") {
-      return res.json([]);
+    if (mainCategory && mainCategory !== "all") {
+      query.mainCategories = mainCategory;
     }
 
-    const data = await Brand.find({
-      mainCategories: mainCategory,
-      isActive: true,
-    })
+    const data = await Brand.find(query)
       .sort({ sortOrder: 1 })
-      .select("name slug");
+      .select("name slug logo");
 
     res.json(data);
   } catch (err) {
@@ -44,16 +44,17 @@ router.get("/brands", async (req, res) => {
 router.get("/prodcategories", async (req, res) => {
   try {
     const { mainCategory, brand } = req.query;
+    
+    const query = { isActive: true };
 
-    if (!mainCategory || mainCategory === "all" || !brand) {
-      return res.json([]);
+    if (mainCategory && mainCategory !== "all") {
+      query.mainCategory = mainCategory;
+    }
+    if (brand) {
+      query.brands = brand;
     }
 
-    const data = await ProdCategory.find({
-      mainCategory,
-      brands: brand,
-      isActive: true,
-    })
+    const data = await ProdCategory.find(query)
       .sort({ sortOrder: 1 })
       .select("name slug image");
 
@@ -67,23 +68,20 @@ router.get("/subcategories", async (req, res) => {
   try {
     const { mainCategory, brand, prodCategory } = req.query;
 
-    if (
-      !mainCategory ||
-      mainCategory === "all" ||
-      !brand ||
-      !prodCategory
-    ) {
-      return res.json([]);
+    const query = { isActive: true };
+    if (mainCategory && mainCategory !== "all") {
+      query.mainCategory = mainCategory;
+    }
+    if (brand) {
+      query.brands = brand;
+    }
+    if (prodCategory) {
+      query.prodCategory = prodCategory; 
     }
 
-    const data = await SubCategory.find({
-      mainCategory,
-      prodCategory,
-      brands: brand,
-      isActive: true,
-    })
+    const data = await SubCategory.find(query)
       .sort({ sortOrder: 1 })
-      .select("name slug image");
+      .select("name slug image category");
 
     res.json(data);
   } catch (err) {

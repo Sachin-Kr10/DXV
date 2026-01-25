@@ -7,18 +7,29 @@ import { useEffect,useState } from "react";
 import api from "../../api/api"
 
 
-function CategorySlider() {
+function CategorySlider({filters,setFilters}){
 
   const [categories,setCategories]= useState([]);
   useEffect(() => {
-    api.get("/categories")
+    
+    api.get("/nav/prodcategories",{
+      params:{
+        mainCategory:filters.mainCategory,
+        brand:filters.brand || undefined,
+      }
+    })
     .then((res) => {
       setCategories(res.data);
     })
     .catch((error) => {
       console.log("failed to lead ctegories", error);
     });
-  },[]);
+  },[filters.mainCategory,filters.brand]);
+
+
+useEffect(() => {
+  setSelectedCategory(filters.prodCategory || null);
+}, [filters.prodCategory]);
 
 const [selectedCategory, setSelectedCategory] = useState(null);
 
@@ -59,12 +70,22 @@ const [selectedCategory, setSelectedCategory] = useState(null);
         >
           {categories.map((cat) => (
             <SwiperSlide
-              key={cat._id}
+              key={cat.slug}
               className="!w-[125px] sm:!w-[135px] md:!w-[138px]"
             >
               <div className="group flex flex-col items-center mt-6">
                 <div
-                  onClick={() => setSelectedCategory(cat._id)}
+                  onClick={() => {
+                    const isSame = selectedCategory === cat.slug;
+
+                    setSelectedCategory(isSame ? null : cat.slug);
+
+                    setFilters((prev) => ({
+                      ...prev,
+                      prodCategory: isSame ? null : cat.slug,
+                      subCategory: null,
+                    }));
+                  }}
                   className={`
                   w-25 h-25 md:w-28 md:h-28
                   rounded-full
@@ -73,9 +94,9 @@ const [selectedCategory, setSelectedCategory] = useState(null);
                   flex items-center justify-center
                   transition-all duration-300 cursor-pointer
                  ${
-                  selectedCategory === cat._id
-                  ? "border-2 border-[#C9A24D] scale-105 shadow-[0_12px_30px_rgba(201,162,77,0.35)]"
-                  : "border-2 border-[#E5E5E5] group-hover:scale-105 group-hover:border-[#C9A24D]"
+                   selectedCategory === cat.slug
+                     ? "border-2 border-[#C9A24D] scale-105 shadow-[0_12px_30px_rgba(201,162,77,0.35)]"
+                     : "border-2 border-[#E5E5E5] group-hover:scale-105 group-hover:border-[#C9A24D]"
                  }`}
                 >
                   <img
@@ -89,10 +110,13 @@ const [selectedCategory, setSelectedCategory] = useState(null);
                   />
                 </div>
 
-                <p className={`mt-3 text-xs md:text-sm font-medium tracking-wide ${
-                 selectedCategory === cat._id
-                  ? "text-[#C9A24D]"
-                  : "text-[#1A1A1A]"}`}>
+                <p
+                  className={`mt-3 text-xs md:text-sm font-medium tracking-wide ${
+                    selectedCategory === cat.slug
+                      ? "text-[#C9A24D]"
+                      : "text-[#1A1A1A]"
+                  }`}
+                >
                   {cat.name}
                 </p>
               </div>

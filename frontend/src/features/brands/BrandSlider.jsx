@@ -1,31 +1,14 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, FreeMode, Navigation } from "swiper/modules";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { IoClose } from "react-icons/io5";
 import "swiper/css";
+import api from "../../api/api";
 
 import img1 from "../../assets/images/1.jpg";
 import img2 from "../../assets/images/2.jpg";
 
-const brands = [
-  { id: 1, name: "AUREX", logo: img1 },
-  { id: 2, name: "VELORÉ", logo: img2 },
-  { id: 3, name: "NOXEN", logo: img1 },
-  { id: 4, name: "ELVYN", logo: img1 },
-  { id: 5, name: "ZÉNTRA", logo: img1 },
-  { id: 6, name: "ORVIA", logo: img1 },
-  { id: 7, name: "LUXYN", logo: img1 },
-  { id: 8, name: "VIREN", logo: img1 },
-  { id: 9, name: "MONEXA", logo: img1 },
-  { id: 10, name: "KAVÉN", logo: img1 },
-  { id: 11, name: "SOLVÉ", logo: img1 },
-  { id: 12, name: "ARVYN", logo: img1 },
-  { id: 13, name: "NÉVRA", logo: img1 },
-  { id: 14, name: "OPHYN", logo: img1 },
-  { id: 15, name: "VÉRIX", logo: img1 },
-  { id: 16, name: "LORÉN", logo: img1 },
-];
 
 const themes = [
   "bg-gradient-to-br from-[#FFF7E8] to-[#F3E7C6]",
@@ -35,8 +18,25 @@ const themes = [
   "bg-gradient-to-br from-[#ECFDF5] to-[#D1FAE5]",
 ];
 
-const BrandSlider = () => {
+function BrandSlider({filters, setFilters}){
+  const [brands, setBrands] = useState([]);
   const [selectedBrand, setSelectedBrand] = useState(null);
+
+useEffect(()=>{
+  api.get("/nav/brands",{
+    params:{
+      mainCategory:filters?.mainCategory || "all",
+    },
+  })
+  .then((res)=>{
+    setBrands(res.data);
+  })
+  .catch((err)=>{
+    console.log("Failed to load brand",err)
+  })
+},[filters?.mainCategory])
+
+
   return (
     <section className="bg-[#F7F7F7] py-12">
       <div className="max-w-7xl mx-auto px-4 mb-6 flex items-center justify-between">
@@ -77,11 +77,19 @@ const BrandSlider = () => {
         >
           {brands.map((brand, i) => (
             <SwiperSlide
-              key={brand.id}
+              key={brand.slug}
               className="!w-[150px] sm:!w-[170px] md:!w-[180px]"
             >
               <div
-                onClick={() => setSelectedBrand(brand.id)}
+                onClick={() => {
+                  setSelectedBrand(brand.slug);
+                  setFilters((prev) => ({
+                    ...prev,
+                    brand: brand.slug,
+                    prodCategory: null,
+                    subCategory: null,
+                  }));
+                }}
                 className={`
                   group relative cursor-pointer
                   ${themes[i % themes.length]}
@@ -89,17 +97,23 @@ const BrandSlider = () => {
                   flex flex-col items-center justify-center
                   transition-all duration-300
                   ${
-                    selectedBrand === brand.id
+                    selectedBrand === brand.slug
                       ? "border-[#C9A24D] border-3 shadow-[0_10px_35px_rgba(201,162,77,0.35)]"
                       : "border-[#E5E5E5] hover:border-[#C9A24D]"
                   }
                 `}
               >
-                {selectedBrand === brand.id && (
+                {selectedBrand === brand.slug && (
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       setSelectedBrand(null);
+                      setFilters((prev) => ({
+                        ...prev,
+                        brand: null,
+                        prodCategory: null,
+                        subCategory: null,
+                      }));
                     }}
                     className="
                       absolute top-2 right-2

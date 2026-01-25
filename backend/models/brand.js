@@ -6,7 +6,6 @@ const brandSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      lowercase: true,
       unique: true,
     },
 
@@ -17,6 +16,11 @@ const brandSchema = new mongoose.Schema(
       lowercase: true,
       unique: true,
       index: true,
+    },
+
+    logo:{
+      type:String,
+      required : true,
     },
 
     mainCategories: {

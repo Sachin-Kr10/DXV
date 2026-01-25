@@ -65,8 +65,8 @@ function Home() {
       <CategorySlider filters={filters} setFilters={setFilters} />
 
       <AdsBannerSlider slide={3} />
-      <SubCategories tag="Popular" />
-      <ProductSlider />
+      <SubCategories tag="Latest" filters={filters} setFilters={setFilters}/>
+      <ProductSlider tag="latest" filters={filters} />
       {/* <ProductPopup></ProductPopup> */}
       <section className="bg-[#E5E5E5] py-8">
         <div className="homebox mx-auto">
@@ -95,11 +95,11 @@ function Home() {
 
       <SubCategories tag="Popular" filters={filters} setFilters={setFilters} />
 
-      <ProductSlider filters={filters} />
+      <ProductSlider tag="popular" filters={filters} />
 
       <AdsBannerSlider slide={2} />
-      <SubCategories tag="Featured" />
-      <ProductSlider />
+      <SubCategories tag="Featured" filters={filters} setFilters={setFilters}/>
+      <ProductSlider tag="featured" filters={filters}/>
       <InstaPic />
     </>
   );

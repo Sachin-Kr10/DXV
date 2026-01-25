@@ -104,12 +104,10 @@ const userSchema = new mongoose.Schema(
 userSchema.index({ email: 1 }, { unique: true });
 userSchema.index({ isBlocked: 1, role: 1 });
 
-/* ---------- Virtual: Account Locked ---------- */
 userSchema.virtual("isLocked").get(function () {
   return !!(this.lockUntil && this.lockUntil > Date.now());
 });
 
-/* ---------- Pre-save: Single Default Address ---------- */
 userSchema.pre("save", function (next) {
   if (!this.addresses?.length) return next();
 

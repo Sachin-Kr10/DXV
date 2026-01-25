@@ -6,7 +6,6 @@ const subCategorySchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      lowercase: true,
     },
 
     slug: {
@@ -24,7 +23,7 @@ const subCategorySchema = new mongoose.Schema(
       lowercase: true,
     },
 
-    category: {
+    prodCategory: {
       type: String, 
       required: true,
       index: true,

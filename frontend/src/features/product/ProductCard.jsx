@@ -82,10 +82,10 @@ function ProductItem({ product }) {
 
         <div className="flex items-center gap-2 mt-2 mx-1">
           <span className="text-[#0B0B0B] font-semibold text-sm sm:text-base">
-            ₹{product.discountedPrice}
+            ₹{product.price}
           </span>
           <span className="text-xs sm:text-sm text-[#C9A24D] line-through">
-            ₹{product.price}
+            ₹{product.mrp}
           </span>
         </div>
         <button
