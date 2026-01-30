@@ -71,10 +71,12 @@ export default function AuthModel({ onClose }) {
 
           {view === "otp" && authData?.email && (
             <VerifyOTP
-              setView={switchView}
-              authData={authData}
-              onClose={onClose}
-            />
+  setView={switchView}
+  authData={authData}
+  onClose={onClose}
+  onSuccess={onClose}
+/>
+
           )}
 
           {view === "forgot" && (

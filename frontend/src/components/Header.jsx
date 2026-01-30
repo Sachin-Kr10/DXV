@@ -89,8 +89,13 @@ useEffect(() => {
   api.get("/auth/me", { withCredentials: true })
     .then(res => {
       if (res.data.loggedIn) setUser(res.data.user);
+      else setUser(null);
+    })
+    .catch(() => {
+      setUser(null);
     });
 }, []);
+
 
 const handleLogout = async () => {
   try {
@@ -195,4 +200,3 @@ const handleLogout = async () => {
 }
 
 export default Header;
-

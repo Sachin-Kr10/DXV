@@ -1,7 +1,8 @@
 import { useEffect, useState, useRef } from "react";
+import { Navigate } from "react-router";
 import api from "../../api/api";
 
-export default function VerifyOTP({ setView, authData, onClose }) {
+export default function VerifyOTP({ setView, authData, onClose, onSuccess }) {
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
@@ -53,7 +54,7 @@ export default function VerifyOTP({ setView, authData, onClose }) {
       setError("");
       submittedRef.current = true;
 
-      const response = await api.post("/auth/verify-otp", {
+      await api.post("/auth/verify-otp", {
         email: authData.email,
         otp: cleanOtp,
         purpose: authData.purpose,
@@ -61,22 +62,12 @@ export default function VerifyOTP({ setView, authData, onClose }) {
         phone: authData.phone
       });
 
-      if (response.data?.accessToken) {
-        localStorage.setItem(
-          "accessToken",
-          response.data.accessToken
-        );
+      alert("Login successful!");
 
-        localStorage.setItem(
-          "user",
-          JSON.stringify(response.data.user)
-        );
-      }
+onSuccess();
 
-      setTimeout(() => {
-        onClose();
-        window.location.reload();
-      }, 400);
+
+
     } catch (err) {
       submittedRef.current = false;
 
