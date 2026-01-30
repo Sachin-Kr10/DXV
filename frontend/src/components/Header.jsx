@@ -9,8 +9,9 @@ import { IoHeartCircleOutline } from "react-icons/io5";
 import { FaOpencart } from "react-icons/fa";
 import { PiUserCircleFill } from "react-icons/pi";
 import { useEffect, useState } from "react";
+import { useAuth } from "../context/AuthContext";
 import api from "../api/api";
-import AuthModel from "../features/auth/AuthModel";
+
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -83,19 +84,9 @@ const Logo = () => {
 };
 
 function Header() {
-  const [user, setUser] = useState(null);
-  const [showAuth, setShowAuth] = useState(false);
 
-useEffect(() => {
-  api.get("/auth/me", { withCredentials: true })
-    .then(res => {
-      if (res.data.loggedIn) setUser(res.data.user);
-      else setUser(null);
-    })
-    .catch(() => {
-      setUser(null);
-    });
-}, []);
+const { user, loading } = useAuth();
+
 
 
 const handleLogout = async () => {
@@ -156,7 +147,7 @@ const handleLogout = async () => {
               </Link>
             </Tooltip>
 
-            <Link to="/login" className="lg:hidden">
+            <Link to="/auth" className="lg:hidden">
               <IconButton size="small">
                 <PiUserCircleFill size={30} />
               </IconButton>
@@ -178,13 +169,17 @@ const handleLogout = async () => {
   </div>
 ) : (
   <>
-    <button onClick={() => setShowAuth(true)}>
-        Login
+    {/* <button onClick={() => setShowAuth(true)} className="text-sm">
+        Login/SignUp
       </button>
 
       {showAuth && (
         <AuthModel onClose={() => setShowAuth(false)} />
-      )}
+      )} */}
+
+      <Link to="/auth" className="text-sm">
+  Login/SignUp
+</Link>
   </>
 )}
 

@@ -24,7 +24,7 @@ export default function AuthModel({ onClose }) {
           onClick={onClose}
           className="absolute top-4 right-2 text-[#8E8E8E] hover:text-[#C9A24D]"
         >
-          <IoClose size={22} />
+          <IoClose size={25} />
         </button>
 
         {(view === "login" || view === "register") && (

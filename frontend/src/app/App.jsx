@@ -1,5 +1,5 @@
 import "../styles/App.css";
-import { Routes, Route } from "react-router";
+import { Routes, Route,useNavigate } from "react-router";
 import ScrollToTop from "../components/ScrollToTop";
 
 import Header from "../components/Header";
@@ -14,8 +14,10 @@ import Payment from "../pages/Payment";
 import Auth from "../features/auth/AuthModel";
 import Admin from "../admin/Admin";
 import AdminRoute from "../routes/AdminRoute";
+import PrivateRoute from "../routes/PrivateRoute";
 
 function App() {
+  const navigate = useNavigate();
   return (
     <>
       <ScrollToTop />
@@ -29,6 +31,7 @@ function App() {
               <Routes>
                 <Route path={"/"} element={<Home />} />
                 <Route path={"/product/:slug"} element={<ProductDetail />} />
+                <Route path="/auth" element={<Auth onClose={() => navigate("/")}/>} />
                 <Route path={"/cart"} element={<Cart />} />
                 <Route
                   path={"/checkout"}

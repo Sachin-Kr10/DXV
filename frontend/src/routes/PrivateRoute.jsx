@@ -26,7 +26,7 @@ export default function PrivateRoute({ children }) {
   }
 
   if (status === "denied") {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/auth" replace />;
   }
 
   return children;

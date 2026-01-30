@@ -1,7 +1,9 @@
 import { useEffect, useState, useRef } from "react";
 import api from "../../api/api";
+import { useAuth } from "../../context/AuthContext";
 
 export default function VerifyOTP({ setView, authData, onClose, onSuccess }) {
+  const { fetchUser } = useAuth();
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
@@ -63,7 +65,8 @@ export default function VerifyOTP({ setView, authData, onClose, onSuccess }) {
 
       alert("Login successful!");
 
-   onSuccess();
+await fetchUser();
+onSuccess();
 
 
 
