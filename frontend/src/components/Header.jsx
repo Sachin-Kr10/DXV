@@ -10,7 +10,7 @@ import { FaOpencart } from "react-icons/fa";
 import { PiUserCircleFill } from "react-icons/pi";
 import { useEffect, useState } from "react";
 import api from "../api/api";
-
+import AuthModel from "../features/auth/AuthModel";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -84,6 +84,7 @@ const Logo = () => {
 
 function Header() {
   const [user, setUser] = useState(null);
+  const [showAuth, setShowAuth] = useState(false);
 
 useEffect(() => {
   api.get("/auth/me", { withCredentials: true })
@@ -165,7 +166,7 @@ const handleLogout = async () => {
   {user ? (
   <div className="flex items-center gap-3">
     <span className="text-sm font-medium">
-      Hi, {user.name}
+      Hi, {user.fullName}
     </span>
 
     <button
@@ -177,9 +178,13 @@ const handleLogout = async () => {
   </div>
 ) : (
   <>
-    <Link to="/login" className="text-sm">Login</Link>
-    <span className="text-[#8E8E8E]">|</span>
-    <Link to="/register" className="text-sm">Register</Link>
+    <button onClick={() => setShowAuth(true)}>
+        Login
+      </button>
+
+      {showAuth && (
+        <AuthModel onClose={() => setShowAuth(false)} />
+      )}
   </>
 )}
 

@@ -13,6 +13,7 @@ import Checkout from "../pages/Checkout";
 import Payment from "../pages/Payment";
 import Auth from "../features/auth/AuthModel";
 import Admin from "../admin/Admin";
+import AdminRoute from "../routes/AdminRoute";
 
 function App() {
   return (
@@ -28,18 +29,37 @@ function App() {
               <Routes>
                 <Route path={"/"} element={<Home />} />
                 <Route path={"/product/:slug"} element={<ProductDetail />} />
-                <Route path={"/cart"} element={<Cart />}/>
-                <Route path={"/login"} element={<Auth />} />
-                <Route path={"/checkout"} element={<Checkout />} />
-                <Route path={"/payment"} element={<Payment />} />
-               
+                <Route path={"/cart"} element={<Cart />} />
+                <Route
+                  path={"/checkout"}
+                  element={
+                    <PrivateRoute>
+                      <Checkout />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path={"/payment"}
+                  element={
+                    <PrivateRoute>
+                      <Payment />
+                    </PrivateRoute>
+                  }
+                />
               </Routes>
               <FooterFeatures />
               <Footer />
             </>
           }
         />
-        <Route path="/admin/*" element={<Admin/>} />
+        <Route
+          path="/admin/*"
+          element={
+            <AdminRoute>
+              <Admin />
+            </AdminRoute>
+          }
+        />
       </Routes>
     </>
   );

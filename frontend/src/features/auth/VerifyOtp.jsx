@@ -1,5 +1,4 @@
 import { useEffect, useState, useRef } from "react";
-import { Navigate } from "react-router";
 import api from "../../api/api";
 
 export default function VerifyOTP({ setView, authData, onClose, onSuccess }) {
@@ -64,7 +63,7 @@ export default function VerifyOTP({ setView, authData, onClose, onSuccess }) {
 
       alert("Login successful!");
 
-onSuccess();
+   onSuccess();
 
 
 
