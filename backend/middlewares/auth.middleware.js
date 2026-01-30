@@ -77,13 +77,17 @@ exports.verifyOtpAndAuth = async (req, res, next) => {
     if (otpDoc.expiresAt < Date.now())
       return res.status(400).json({ message: "OTP expired" });
 
-    const isMatch = await bcrypt.compare(
-      otp.toString(),
-      otpDoc.otp
-    );
+    if (otpDoc.attempts >= 5)
+      return res.status(429).json({ message: "Too many attempts" });
 
-    if (!isMatch)
+    const isMatch = await bcrypt.compare(otp, otpDoc.otp);
+
+    if (!isMatch) {
+      otpDoc.attempts += 1;
+      await otpDoc.save();
+
       return res.status(400).json({ message: "Wrong OTP" });
+    }
 
     let user = await User.findOne({ email });
 
@@ -121,6 +125,7 @@ exports.verifyOtpAndAuth = async (req, res, next) => {
     });
 
     res.status(200).json({
+      message: "Authentication successful",
       accessToken,
       user: {
         id: user._id,
@@ -128,12 +133,10 @@ exports.verifyOtpAndAuth = async (req, res, next) => {
         role: user.role
       }
     });
-
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    next(error);
   }
 };
-
 
 /* ================= REFRESH TOKEN ================= */
 
@@ -192,27 +195,3 @@ exports.logout = async (req, res, next) => {
     next(error);
   }
 };
-
-
-exports.recoverEmail = async (req, res) => {
-  try {
-    const { phone } = req.body;
-
-    if (!phone)
-      return res.status(400).json({ message: "Phone required" });
-
-    const user = await User.findOne({ phone });
-
-    if (!user)
-      return res.status(404).json({ message: "User not found" });
-
-    res.status(200).json({
-      email: user.email
-    });
-  } catch {
-    res.status(500).json({
-      message: "Server error"
-    });
-  }
-};
-

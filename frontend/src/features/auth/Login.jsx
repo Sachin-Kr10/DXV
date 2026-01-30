@@ -7,9 +7,10 @@ export default function Login({ setView, setAuthData }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const inputBase = "w-full px-4 py-3 rounded-lg bg-white border border-[#E5E5E5] text-[#1A1A1A] placeholder-[#8E8E8E] focus:outline-none focus:border-[#C9A24D] focus:ring-1 focus:ring-[#C9A24D] transition";
+  const inputBase =
+    "w-full px-4 py-3 rounded-lg bg-white border border-[#E5E5E5] text-[#1A1A1A] placeholder-[#8E8E8E] focus:outline-none focus:border-[#C9A24D] focus:ring-1 focus:ring-[#C9A24D] transition";
 
-  const submit = async (e) => {
+  const submit = async e => {
     e.preventDefault();
 
     const cleanEmail = email.trim();
@@ -28,15 +29,21 @@ export default function Login({ setView, setAuthData }) {
       setLoading(true);
       setError("");
 
-      await api.post("/auth/login/send-otp", {
-        email: cleanEmail
+      await api.post("/auth/request-otp", {
+        email: cleanEmail,
+        purpose: "login"
       });
 
-      setAuthData({ email: cleanEmail });
-      setView("otp");
+      setAuthData({
+        email: cleanEmail,
+        purpose: "login"
+      });
 
+      setView("otp");
     } catch (err) {
-      setError(err.response?.data?.msg || "Failed to send OTP");
+      setError(
+        err.response?.data?.message || "Failed to send OTP"
+      );
     } finally {
       setLoading(false);
     }
@@ -52,7 +59,7 @@ export default function Login({ setView, setAuthData }) {
         type="email"
         placeholder="Email address"
         value={email}
-        onChange={(e) => {
+        onChange={e => {
           setEmail(e.target.value);
           setError("");
         }}

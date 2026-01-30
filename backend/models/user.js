@@ -99,6 +99,7 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false
     },
+
     emailVerification: Date,
     lastLogin:{
       type: Date
@@ -109,17 +110,30 @@ const userSchema = new mongoose.Schema(
       type : String,
       select : false,
     },
+
     addresses: {
       type: [addressSchema],
       default: [],
     },
+    deletedAt: Date,
   },
   { timestamps: true },
 );
 
 
-userSchema.methods.updateLastLogin = function() {
-  this.lastLogin = Date.now();
+// userSchema.pre("save", function (next) {
+//   if (this.addresses?.length) {
+//     const defaults = this.addresses.filter(a => a.isDefault);
+//     if (defaults.length > 1) {
+//       this.addresses.forEach(a => (a.isDefault = false));
+//       this.addresses[0].isDefault = true;
+//     }
+//   }
+//   next();
+// });
+
+userSchema.methods.updateLastLogin = function () {
+  this.lastLogin = new Date();
   return this.save();
 };
 

@@ -7,11 +7,11 @@ export default function ForgotPassword({ setView }) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const inputBase = "w-full px-4 py-3 rounded-lg bg-[#FFFFFF] border border-[#E5E5E5] text-[#1A1A1A] placeholder-[#8E8E8E] focus:outline-none focus:border-[#C9A24D] focus:ring-1 focus:ring-[#C9A24D] transition";
+  const submit = async e => {
+    if (e) e.preventDefault();
 
-  const submit = async () => {
     const cleanPhone = phone.trim();
-    
+
     if (!cleanPhone) {
       setError("Phone number is required");
       return;
@@ -27,24 +27,27 @@ export default function ForgotPassword({ setView }) {
       setError("");
       setResult("");
 
-      const res = await api.post("/recovery/recover-email", {
+      const res = await api.post("/auth/recover-email", {
         phone: cleanPhone
       });
 
       setResult(res.data.email);
     } catch (err) {
-      setError(err.response?.data?.msg || "No account found with this phone number");
+      setError(
+        err.response?.data?.message ||
+          "No account found with this phone number"
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <>
+    <form onSubmit={submit}>
       <h2 className="text-2xl font-semibold mb-3 text-[#0B0B0B] tracking-tight">
         Recover Email
       </h2>
-      
+
       <p className="text-sm text-[#8E8E8E] mb-6">
         Enter your registered phone number to recover email.
       </p>
@@ -53,12 +56,16 @@ export default function ForgotPassword({ setView }) {
         <div className="px-4 flex items-center bg-white border border-[#E5E5E5] rounded-l-lg text-sm text-gray-600">
           🇮🇳 +91
         </div>
+
         <input
           type="tel"
           placeholder="Phone number"
           value={phone}
-          onChange={(e) => {
-            const value = e.target.value.replace(/\D/g, "").slice(0, 10);
+          onChange={e => {
+            const value = e.target.value
+              .replace(/\D/g, "")
+              .slice(0, 10);
+
             setPhone(value);
             setError("");
             setResult("");
@@ -76,13 +83,17 @@ export default function ForgotPassword({ setView }) {
 
       {result && (
         <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-          <p className="text-green-800 text-sm font-medium">Your email:</p>
-          <p className="text-green-900 font-semibold mt-1">{result}</p>
+          <p className="text-green-800 text-sm font-medium">
+            Your email:
+          </p>
+          <p className="text-green-900 font-semibold mt-1">
+            {result}
+          </p>
         </div>
       )}
 
       <button
-        onClick={submit}
+        type="submit"
         disabled={loading}
         className="w-full py-3 rounded-full bg-[#0B0B0B] text-[#FFFFFF] font-medium tracking-wide transition hover:bg-[#000000] active:scale-[0.98] disabled:opacity-60"
       >
@@ -90,11 +101,12 @@ export default function ForgotPassword({ setView }) {
       </button>
 
       <button
+        type="button"
         onClick={() => setView("login")}
         className="text-xs text-[#C9A24D] block mx-auto mt-4"
       >
         Back to login
       </button>
-    </>
+    </form>
   );
 }

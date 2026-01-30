@@ -1,17 +1,16 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const authController = require('../../controllers/auth.controller');
-const { authenticate } = require('../../middlewares/auth.middleware');
 
-router.post('/signup/send-otp', authController.sendSignupOtp);
-router.post('/login/send-otp', authController.sendLoginOtp);
-router.post('/signup/verify', authController.verifyOtp);
-router.post('/login/verify', authController.verifyOtp);
-router.post('/recover-email', authController.recoverEmail);
-router.post('/resend-otp', authController.resendOtp);
-router.post('/refresh-token', authController.refreshToken);
-router.post('/logout', authController.logout);
+const authController = require("../../controllers/auth.controller");
 
-router.get('/me', authenticate, authController.getCurrentUser);
+router.post("/request-otp", authController.requestOtp);
+
+router.post("/verify-otp", authController.verifyOtpAndAuth);
+
+router.post("/refresh", authController.refreshAccessToken);
+
+router.post("/logout", authController.logout);
+
+router.post("/recover-email", authController.recoverEmail);
 
 module.exports = router;

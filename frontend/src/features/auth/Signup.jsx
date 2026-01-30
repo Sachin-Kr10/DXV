@@ -1,9 +1,9 @@
 import { useState } from "react";
 import api from "../../api/api";
 
-export default function Signup({ setView, setAuthData }) { // Changed from Register to Signup
+export default function Signup({ setView, setAuthData }) {
   const [form, setForm] = useState({
-    name: "",
+    fullName: "",
     email: "",
     phone: ""
   });
@@ -11,24 +11,26 @@ export default function Signup({ setView, setAuthData }) { // Changed from Regis
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const inputBase = "w-full px-4 py-3 rounded-lg bg-white border border-[#E5E5E5] text-[#1A1A1A] placeholder-[#8E8E8E] focus:outline-none focus:border-[#C9A24D] focus:ring-1 focus:ring-[#C9A24D] transition";
+  const inputBase =
+    "w-full px-4 py-3 rounded-lg bg-white border border-[#E5E5E5] text-[#1A1A1A] placeholder-[#8E8E8E] focus:outline-none focus:border-[#C9A24D] focus:ring-1 focus:ring-[#C9A24D] transition";
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     setForm({
       ...form,
       [e.target.name]: e.target.value
     });
+
     setError("");
   };
 
-  const submit = async (e) => {
+  const submit = async e => {
     e.preventDefault();
 
-    const name = form.name.trim();
+    const fullName = form.fullName.trim();
     const email = form.email.trim().toLowerCase();
     const phone = form.phone.trim();
 
-    if (!name || !email || !phone) {
+    if (!fullName || !email || !phone) {
       setError("All fields are required");
       return;
     }
@@ -38,31 +40,33 @@ export default function Signup({ setView, setAuthData }) { // Changed from Regis
       return;
     }
 
-    if (!/^\d{10}$/.test(phone)) {
-      setError("Phone must be 10 digits");
-      return;
-    }
+    if (!/^[6-9]\d{9}$/.test(phone)) {
+  setError("Enter a valid Indian mobile number");
+  return;
+}
+
 
     try {
       setLoading(true);
       setError("");
 
-      await api.post("/auth/signup/send-otp", {
-        name,
+      await api.post("/auth/request-otp", {
         email,
-        phone
+        purpose: "signup"
       });
 
       setAuthData({
-        name,
+        fullName,
         email,
-        phone
+        phone,
+        purpose: "signup"
       });
 
       setView("otp");
-
     } catch (err) {
-      setError(err.response?.data?.msg || "Something went wrong");
+      setError(
+        err.response?.data?.message || "Something went wrong"
+      );
     } finally {
       setLoading(false);
     }
@@ -75,9 +79,9 @@ export default function Signup({ setView, setAuthData }) { // Changed from Regis
       </h2>
 
       <input
-        name="name"
+        name="fullName"
         placeholder="Full name"
-        value={form.name}
+        value={form.fullName}
         onChange={handleChange}
         className={`${inputBase} mb-4`}
         autoFocus

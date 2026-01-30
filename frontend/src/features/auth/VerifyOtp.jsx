@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import api from "../../api/api";
 
 export default function VerifyOTP({ setView, authData, onClose }) {
@@ -8,14 +8,18 @@ export default function VerifyOTP({ setView, authData, onClose }) {
   const [error, setError] = useState("");
   const [timer, setTimer] = useState(60);
 
+  const submittedRef = useRef(false);
+
   useEffect(() => {
-    if (!authData?.email) {
+    if (!authData?.email || !authData?.purpose) {
       setView("login");
+      return;
     }
-    
-    // Start countdown timer
+
+    setTimer(60);
+
     const countdown = setInterval(() => {
-      setTimer((prev) => {
+      setTimer(prev => {
         if (prev <= 1) {
           clearInterval(countdown);
           return 0;
@@ -27,9 +31,10 @@ export default function VerifyOTP({ setView, authData, onClose }) {
     return () => clearInterval(countdown);
   }, [authData, setView]);
 
-  const submit = async (e) => {
+  const submit = async e => {
     if (e) e.preventDefault();
-    if (loading) return;
+
+    if (loading || submittedRef.current) return;
 
     const cleanOtp = otp.trim();
 
@@ -38,7 +43,7 @@ export default function VerifyOTP({ setView, authData, onClose }) {
       return;
     }
 
-    if (!authData?.email) {
+    if (!authData?.email || !authData?.purpose) {
       setError("Session expired. Try again.");
       return;
     }
@@ -46,32 +51,38 @@ export default function VerifyOTP({ setView, authData, onClose }) {
     try {
       setLoading(true);
       setError("");
+      submittedRef.current = true;
 
-      const url = authData?.name
-        ? "/auth/signup/verify"
-        : "/auth/login/verify";
-
-      const response = await api.post(url, {
+      const response = await api.post("/auth/verify-otp", {
         email: authData.email,
-        name: authData.name,
-        phone: authData.phone,
-        otp: cleanOtp
+        otp: cleanOtp,
+        purpose: authData.purpose,
+        fullName: authData.fullName,
+        phone: authData.phone
       });
 
-      // Store token if received
-      if (response.data.data?.accessToken) {
-        localStorage.setItem("accessToken", response.data.data.accessToken);
-        localStorage.setItem("user", JSON.stringify(response.data.data.user));
+      if (response.data?.accessToken) {
+        localStorage.setItem(
+          "accessToken",
+          response.data.accessToken
+        );
+
+        localStorage.setItem(
+          "user",
+          JSON.stringify(response.data.user)
+        );
       }
 
-      // Close modal
       setTimeout(() => {
         onClose();
-        window.location.reload(); // Refresh to update auth state
-      }, 500);
-
+        window.location.reload();
+      }, 400);
     } catch (err) {
-      setError(err.response?.data?.msg || "Invalid OTP");
+      submittedRef.current = false;
+
+      setError(
+        err.response?.data?.message || "Invalid OTP"
+      );
     } finally {
       setLoading(false);
     }
@@ -84,20 +95,16 @@ export default function VerifyOTP({ setView, authData, onClose }) {
       setResending(true);
       setError("");
 
-      const resendUrl = authData?.name
-        ? "/auth/signup/send-otp"
-        : "/auth/login/send-otp";
-
-      await api.post(resendUrl, {
-        name: authData.name,
+      await api.post("/auth/request-otp", {
         email: authData.email,
-        phone: authData.phone
+        purpose: authData.purpose
       });
 
       setTimer(60);
-      setError("OTP resent successfully!");
-      setTimeout(() => setError(""), 3000);
 
+      setError("OTP resent successfully!");
+
+      setTimeout(() => setError(""), 2500);
     } catch {
       setError("Failed to resend OTP");
     } finally {
@@ -105,7 +112,6 @@ export default function VerifyOTP({ setView, authData, onClose }) {
     }
   };
 
-  // Auto submit when 6 digits entered
   useEffect(() => {
     if (otp.length === 6) {
       submit();
@@ -127,7 +133,7 @@ export default function VerifyOTP({ setView, authData, onClose }) {
         value={otp}
         autoFocus
         inputMode="numeric"
-        onChange={(e) => {
+        onChange={e => {
           const value = e.target.value.replace(/\D/g, "");
           setOtp(value);
           setError("");
@@ -137,7 +143,13 @@ export default function VerifyOTP({ setView, authData, onClose }) {
       />
 
       {error && (
-        <p className={`text-xs mb-3 ${error.includes("successfully") ? "text-green-600" : "text-red-500"}`}>
+        <p
+          className={`text-xs mb-3 ${
+            error.includes("successfully")
+              ? "text-green-600"
+              : "text-red-500"
+          }`}
+        >
           {error}
         </p>
       )}
@@ -156,7 +168,11 @@ export default function VerifyOTP({ setView, authData, onClose }) {
         onClick={resendOtp}
         className="w-full text-sm text-[#C9A24D] hover:underline disabled:opacity-60"
       >
-        {resending ? "Resending..." : timer > 0 ? `Resend OTP (${timer}s)` : "Resend OTP"}
+        {resending
+          ? "Resending..."
+          : timer > 0
+          ? `Resend OTP (${timer}s)`
+          : "Resend OTP"}
       </button>
     </form>
   );
