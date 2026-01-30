@@ -8,6 +8,9 @@ import { MdCompare } from "react-icons/md";
 import { IoHeartCircleOutline } from "react-icons/io5";
 import { FaOpencart } from "react-icons/fa";
 import { PiUserCircleFill } from "react-icons/pi";
+import { useEffect, useState } from "react";
+import api from "../api/api";
+
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -18,6 +21,9 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 
 const Logo = () => {
+
+
+  
   return (
     <Link
       to="/"
@@ -77,6 +83,25 @@ const Logo = () => {
 };
 
 function Header() {
+  const [user, setUser] = useState(null);
+
+useEffect(() => {
+  api.get("/auth/me", { withCredentials: true })
+    .then(res => {
+      if (res.data.loggedIn) setUser(res.data.user);
+    });
+}, []);
+
+const handleLogout = async () => {
+  try {
+    await api.post("/auth/logout", {}, { withCredentials: true });
+    window.location.href = "/";
+  } catch (err) {
+    console.error("Logout failed");
+  }
+};
+
+
   return (
   <>
     <header className="sticky top-0 z-50 bg-white border-b border-[#E5E5E5]">
@@ -132,10 +157,29 @@ function Header() {
             </Link>
 
             <div className="hidden lg:flex items-center gap-2 ml-2">
-              <Link to="/login" className="text-sm">Login</Link>
-              <span className="text-[#8E8E8E]">|</span>
-              <Link to="/register" className="text-sm">Register</Link>
-            </div>
+  {user ? (
+  <div className="flex items-center gap-3">
+    <span className="text-sm font-medium">
+      Hi, {user.name}
+    </span>
+
+    <button
+      onClick={handleLogout}
+      className="text-sm text-[#C9A24D] hover:underline"
+    >
+      Logout
+    </button>
+  </div>
+) : (
+  <>
+    <Link to="/login" className="text-sm">Login</Link>
+    <span className="text-[#8E8E8E]">|</span>
+    <Link to="/register" className="text-sm">Register</Link>
+  </>
+)}
+
+</div>
+
 
           </div>
         </div>

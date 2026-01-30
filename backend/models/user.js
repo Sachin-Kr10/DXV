@@ -72,18 +72,20 @@ const userSchema = new mongoose.Schema(
       index: true,
       lowercase: true,
       trim:true,
+      match: [/^\S+@\S+\.\S+$/, 'Please enter a valid email']
     },
 
-    password: {
+    phone: {
       type: String,
-      required: true,
-      select: false,
-      minlength:6,
+      unique : true,
+      trim : true,
+      match: [/^\d{10}$/, 'Phone number must be 10 digits']
+
     },
 
     role: {
       type: String,
-      enum: ["admin", "user"],
+      enum: ["user","admin","brand"],
       default: "user",
       index:true,
     },
@@ -93,6 +95,20 @@ const userSchema = new mongoose.Schema(
       default: false,
       index: true,
     },
+    isVerified: {
+      type: Boolean,
+      default: false
+    },
+    emailVerification: Date,
+    lastLogin:{
+      type: Date
+    },
+    
+
+    refreshToken :{
+      type : String,
+      select : false,
+    },
     addresses: {
       type: [addressSchema],
       default: [],
@@ -101,47 +117,10 @@ const userSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-userSchema.index({ email: 1 }, { unique: true });
-userSchema.index({ isBlocked: 1, role: 1 });
 
-userSchema.virtual("isLocked").get(function () {
-  return !!(this.lockUntil && this.lockUntil > Date.now());
-});
-
-userSchema.pre("save", function (next) {
-  if (!this.addresses?.length) return next();
-
-  let foundDefault = false;
-
-  this.addresses.forEach((addr) => {
-    if (addr.isDefault) {
-      if (!foundDefault) foundDefault = true;
-      else addr.isDefault = false;
-    }
-  });
-
-  next();
-});
-
-/* ---------- Methods: Login Security ---------- */
-userSchema.methods.incLoginAttempts = function () {
-  const MAX_ATTEMPTS = 5;
-  const LOCK_TIME = 2 * 60 * 60 * 1000; // 2 hours
-
-  if (this.lockUntil && this.lockUntil < Date.now()) {
-    return this.updateOne({
-      loginAttempts: 1,
-      lockUntil: null,
-    });
-  }
-
-  const updates = { $inc: { loginAttempts: 1 } };
-
-  if (this.loginAttempts + 1 >= MAX_ATTEMPTS && !this.isLocked) {
-    updates.$set = { lockUntil: Date.now() + LOCK_TIME };
-  }
-
-  return this.updateOne(updates);
+userSchema.methods.updateLastLogin = function() {
+  this.lastLogin = Date.now();
+  return this.save();
 };
 
 module.exports = mongoose.model("User", userSchema);
