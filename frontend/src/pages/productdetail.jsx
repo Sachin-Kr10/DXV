@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { FaOpencart,FaStar,FaChevronLeft,FaChevronRight,} from "react-icons/fa";
 import { Link,useParams ,useNavigate} from "react-router";
 import RelatedProduct from "../features/product/relatedproducts";
-import { useCart } from "../context/CartContext";
+import { useCart } from "../context/cartcontext";
 import api from "../api/api"
 
 export default function ProductDetailPage() {

@@ -1,4 +1,4 @@
-import { useCart } from "../context/CartContext";
+import { useCart } from "../context/cartcontext";
 import { FaTrash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router";
 
