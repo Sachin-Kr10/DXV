@@ -2,6 +2,7 @@ import { useCart } from "../context/CartContext";
 import { FaTrash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router";
 
+
 export default function Cart() {
   const { cart, increaseQty, decreaseQty, removeItem, totals } = useCart();
 

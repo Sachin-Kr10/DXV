@@ -1,209 +1,480 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { FiPlus, FiEdit, FiToggleLeft, FiToggleRight } from "react-icons/fi";
+import {
+  FiPlus,
+  FiEdit,
+  FiToggleLeft,
+  FiToggleRight,
+  FiX,
+  FiUpload
+} from "react-icons/fi";
+import api from "../../api/api";
 
-const Categories = () => {
-  const [categories, setCategories] = useState([]);
-  const [showForm, setShowForm] = useState(false);
+/* ================= DEFAULT ================= */
+
+const emptyMain = { name: "", sortOrder: 0 };
+
+const emptyProd = {
+  name: "",
+  mainCategory: "",
+  brands: [],
+  image: null,
+  sortOrder: 0
+};
+
+const emptySub = {
+  name: "",
+  mainCategory: "",
+  prodCategory: "",
+  brands: [],
+  sortOrder: 0
+};
+
+export default function Category() {
+  const [tab, setTab] = useState("main");
+
+  const [mainCats, setMainCats] = useState([]);
+  const [prodCats, setProdCats] = useState([]);
+  const [subCats, setSubCats] = useState([]);
+  const [brands, setBrands] = useState([]);
+
+  const [form, setForm] = useState(emptyMain);
   const [editId, setEditId] = useState(null);
+  const [showForm, setShowForm] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const [form, setForm] = useState({
-    name: "",
-    image: "",
-  });
+  const [preview, setPreview] = useState(null);
 
-  const loadCategories = async () => {
-    const res = await axios.get(
-      "http://localhost:3000/api/admin/categories"
-    );
-    setCategories(res.data);
+  /* ================= LOAD ================= */
+
+  const loadAll = async () => {
+    try {
+      setLoading(true);
+
+      const [m, p, s, b] = await Promise.all([
+        api.get("/admin/categories/main"),
+        api.get("/admin/categories/product"),
+        api.get("/admin/categories/sub"),
+        api.get("/admin/brands")
+      ]);
+
+      setMainCats(m.data || []);
+      setProdCats(p.data || []);
+      setSubCats(s.data || []);
+      setBrands(b.data || []);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    loadCategories();
+    loadAll();
   }, []);
+
+  /* ================= FORM ================= */
 
   const openAdd = () => {
     setEditId(null);
-    setForm({ name: "", image: "" });
+    setPreview(null);
+
+    setForm(
+      tab === "main"
+        ? emptyMain
+        : tab === "product"
+        ? emptyProd
+        : emptySub
+    );
+
     setShowForm(true);
   };
 
-  const openEdit = (cat) => {
-    setEditId(cat._id);
-    setForm({ name: cat.name, image: cat.image });
+  const openEdit = (item) => {
+    setEditId(item._id);
+
+    setForm({
+      ...item,
+      image: null
+    });
+
+    setPreview(item.image || null);
     setShowForm(true);
   };
 
-  const saveCategory = async (e) => {
+  /* ================= SAVE ================= */
+
+  const save = async (e) => {
     e.preventDefault();
 
-    const url = editId
-      ? `http://localhost:3000/api/admin/categories/${editId}`
-      : "http://localhost:3000/api/admin/categories";
+    const fd = new FormData();
 
-    await axios[editId ? "put" : "post"](url, form);
+    Object.entries(form).forEach(([k, v]) => {
+      if (v === null || v === "") return;
+
+      if (Array.isArray(v)) {
+        v.forEach(val => fd.append(k, val));
+      } else {
+        fd.append(k, v);
+      }
+    });
+
+    const base = `/admin/categories/${tab}`;
+
+    if (editId) {
+      await api.put(`${base}/${editId}`, fd);
+    } else {
+      await api.post(base, fd);
+    }
+
     setShowForm(false);
-    loadCategories();
+    loadAll();
   };
 
-  const toggleCategory = async (id) => {
-    await axios.patch(
-      `http://localhost:3000/api/admin/categories/${id}/toggle`
+  /* ================= TOGGLE ================= */
+
+  const toggle = async (id) => {
+    await api.patch(`/admin/categories/product/${id}/toggle`);
+    loadAll();
+  };
+
+  /* ================= VALIDATION ================= */
+
+  const isValid =
+    tab === "main"
+      ? form.name
+      : tab === "product"
+      ? form.name && form.mainCategory && form.brands?.length
+      : form.name &&
+        form.mainCategory &&
+        form.prodCategory &&
+        form.brands?.length;
+
+  /* ================= DATA ================= */
+
+  const list =
+    tab === "main" ? mainCats : tab === "product" ? prodCats : subCats;
+
+  if (loading) {
+    return (
+      <div className="p-12 text-center text-[#8E8E8E]">
+        Loading…
+      </div>
     );
-    loadCategories();
-  };
-
-  const sortedCategories = [...categories].sort(
-  (a, b) => b.isActive - a.isActive
-);
-
+  }
 
   return (
-    <div className="p-6 bg-[#F7F7F7] min-h-screen">
-      <div className="flex justify-between items-center mb-8">
+    <div className="min-h-screen bg-[#F7F7F7] p-8">
+
+      {/* HEADER */}
+      <div className="flex justify-between items-center mb-10">
+
         <div>
-          <h1 className="text-2xl font-semibold text-[#1A1A1A]">
-            Categories
+          <h1 className="text-3xl font-semibold text-[#0B0B0B]">
+            Category Manager
           </h1>
           <p className="text-sm text-[#8E8E8E] mt-1">
-            Create, edit and control category visibility
+            Premium catalogue control
           </p>
         </div>
 
         <button
           onClick={openAdd}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-lg 
-          bg-[#0B0B0B] text-white text-sm font-medium hover:bg-[#000000] transition"
+          className="flex items-center gap-2 px-6 py-3 bg-[#000000] text-white rounded-full shadow hover:opacity-90 transition"
         >
-          <FiPlus size={16} />
-          Add Category
+          <FiPlus /> Add New
         </button>
+
       </div>
-      <div className="bg-white rounded-xl border border-[#E5E5E5] overflow-hidden">
-        <table className="w-full">
-          <thead className="bg-[#F7F7F7]">
-            <tr className="text-[#1A1A1A] text-sm">
-              <th className="p-5 text-left font-medium">Category</th>
-              <th className="p-5 text-left font-medium">Status</th>
-              <th className="p-5 text-right font-medium">Actions</th>
+
+      {/* TABS */}
+      <div className="flex gap-4 mb-8">
+
+        {["main", "product", "sub"].map(t => (
+          <button
+            key={t}
+            onClick={() => setTab(t)}
+            className={`px-6 py-2 rounded-full text-sm transition ${
+              tab === t
+                ? "bg-[#000000] text-white"
+                : "bg-white border border-[#E5E5E5] text-[#8E8E8E]"
+            }`}
+          >
+            {t.toUpperCase()}
+          </button>
+        ))}
+
+      </div>
+
+      {/* TABLE */}
+      <div className="bg-white rounded-2xl border border-[#E5E5E5] shadow-sm overflow-hidden">
+
+        <table className="w-full text-sm">
+
+          <thead className="bg-[#F7F7F7] text-[#8E8E8E]">
+            <tr>
+              <th className="p-4 text-left">Name</th>
+              {tab !== "main" && <th>Main</th>}
+              {tab === "sub" && <th>Product</th>}
+              {tab === "product" && <th>Brands</th>}
+              <th>Status</th>
+              <th className="p-4 text-right">Action</th>
             </tr>
           </thead>
 
           <tbody>
-            {sortedCategories.map((cat) => (
+
+            {list.map(c => (
               <tr
-                key={cat._id}
-                className="border-t border-[#E5E5E5] hover:bg-[#F7F7F7] transition"
+                key={c._id}
+                className="border-t hover:bg-[#F7F7F7] transition"
               >
-               
-                <td className="p-6">
-                  <div className="flex items-center gap-6">
-                    <img
-                      src={cat.image}
-                      alt={cat.name}
-                      className="w-16 h-16 rounded-full object-cover border"
-                    />
-                    <span className="text-[15px] font-medium text-[#1A1A1A]">
-                      {cat.name}
-                    </span>
-                  </div>
+
+                <td className="p-4 font-medium text-[#1A1A1A]">
+                  {c.name}
                 </td>
 
-                <td className="p-5">
+                {tab !== "main" && (
+                  <td className="capitalize text-[#8E8E8E]">
+                    {c.mainCategory}
+                  </td>
+                )}
+
+                {tab === "sub" && (
+                  <td className="capitalize text-[#8E8E8E]">
+                    {c.prodCategory}
+                  </td>
+                )}
+
+                {tab === "product" && (
+                  <td className="text-xs text-[#8E8E8E] max-w-[220px] truncate">
+                    {c.brands?.join(", ")}
+                  </td>
+                )}
+
+                <td>
                   <span
-                    className={`px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide ${
-                      cat.isActive
-                        ? "bg-[#C9A24D]/15 text-[#C9A24D]"
+                    className={`px-3 py-1 rounded-full text-xs ${
+                      c.isActive
+                        ? "bg-[#C9A24D]/20 text-[#C9A24D]"
                         : "bg-[#E5E5E5] text-[#8E8E8E]"
                     }`}
                   >
-                    {cat.isActive ? "ACTIVE" : "DISABLED"}
+                    {c.isActive ? "Active" : "Disabled"}
                   </span>
                 </td>
 
-                <td className="p-5">
-                  <div className="flex justify-end items-center gap-5">
-                    <button
-                      onClick={() => openEdit(cat)}
-                      className="text-[#8E8E8E] hover:text-[#1A1A1A] transition"
-                    >
-                      <FiEdit size={22} />
-                    </button>
+                <td className="p-4 flex justify-end gap-4">
 
-                    <button
-                      onClick={() => toggleCategory(cat._id)}
-                      className="text-[#8E8E8E] hover:text-[#C9A24D] transition"
-                    >
-                      {cat.isActive ? (
-                        <FiToggleRight size={30} />
+                  <button onClick={() => openEdit(c)}>
+                    <FiEdit className="text-[#8E8E8E] hover:text-black" />
+                  </button>
+
+                  {tab === "product" && (
+                    <button onClick={() => toggle(c._id)}>
+                      {c.isActive ? (
+                        <FiToggleRight className="text-[#C9A24D]" />
                       ) : (
-                        <FiToggleLeft size={30} />
+                        <FiToggleLeft className="text-[#8E8E8E]" />
                       )}
                     </button>
-                  </div>
+                  )}
+
                 </td>
+
               </tr>
             ))}
+
           </tbody>
+
         </table>
+
+        {!list.length && (
+          <div className="p-10 text-center text-[#8E8E8E]">
+            No data found
+          </div>
+        )}
+
       </div>
 
+      {/* MODAL */}
       {showForm && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur flex items-center justify-center z-50">
+
           <form
-            onSubmit={saveCategory}
-            className="bg-white p-6 rounded-xl w-full max-w-md"
+            onSubmit={save}
+            className="bg-white w-full max-w-xl rounded-2xl p-8 relative shadow-xl"
           >
-            <h2 className="text-lg font-semibold text-[#1A1A1A] mb-5">
-              {editId ? "Edit Category" : "Add Category"}
+
+            <button
+              type="button"
+              onClick={() => setShowForm(false)}
+              className="absolute top-4 right-4 text-[#8E8E8E]"
+            >
+              <FiX />
+            </button>
+
+            <h2 className="text-xl font-semibold mb-6 text-[#0B0B0B]">
+              {editId ? "Edit" : "Add"} {tab.toUpperCase()}
             </h2>
 
-            <div className="space-y-4">
-              <input
-                required
-                placeholder="Category name"
-                value={form.name}
-                onChange={(e) =>
-                  setForm({ ...form, name: e.target.value })
-                }
-                className="w-full border border-[#E5E5E5] rounded-lg px-4 py-3 text-sm
-                focus:outline-none focus:border-[#C9A24D]"
-              />
+            {/* NAME */}
+            <input
+              placeholder="Name"
+              required
+              value={form.name || ""}
+              onChange={e =>
+                setForm({ ...form, name: e.target.value })
+              }
+              className="w-full p-3 mb-4 border border-[#E5E5E5] rounded-xl focus:outline-none focus:border-[#C9A24D]"
+            />
 
-              <input
-                required
-                placeholder="Image URL"
-                value={form.image}
-                onChange={(e) =>
-                  setForm({ ...form, image: e.target.value })
-                }
-                className="w-full border border-[#E5E5E5] rounded-lg px-4 py-3 text-sm
-                focus:outline-none focus:border-[#C9A24D]"
-              />
-            </div>
+            {/* SORT */}
+            <input
+              type="number"
+              placeholder="Sort Order"
+              value={form.sortOrder || 0}
+              onChange={e =>
+                setForm({ ...form, sortOrder: e.target.value })
+              }
+              className="w-full p-3 mb-4 border border-[#E5E5E5] rounded-xl focus:outline-none focus:border-[#C9A24D]"
+            />
 
-            <div className="flex justify-end gap-3 mt-8">
+            {/* MAIN */}
+            {tab !== "main" && (
+              <select
+                value={form.mainCategory || ""}
+                onChange={e =>
+                  setForm({ ...form, mainCategory: e.target.value })
+                }
+                className="w-full p-3 mb-4 border border-[#E5E5E5] rounded-xl focus:outline-none focus:border-[#C9A24D]"
+                required
+              >
+                <option value="">Select Main</option>
+
+                {mainCats.map(m => (
+                  <option key={m._id} value={m.slug}>
+                    {m.name}
+                  </option>
+                ))}
+              </select>
+            )}
+
+            {/* PRODUCT */}
+            {tab === "sub" && (
+              <select
+                value={form.prodCategory || ""}
+                onChange={e =>
+                  setForm({ ...form, prodCategory: e.target.value })
+                }
+                className="w-full p-3 mb-4 border border-[#E5E5E5] rounded-xl focus:outline-none focus:border-[#C9A24D]"
+                required
+              >
+                <option value="">Select Product</option>
+
+                {prodCats
+                  .filter(p => p.mainCategory === form.mainCategory)
+                  .map(p => (
+                    <option key={p._id} value={p.slug}>
+                      {p.name}
+                    </option>
+                  ))}
+              </select>
+            )}
+
+            {/* BRANDS */}
+            {(tab === "product" || tab === "sub") && (
+              <div className="border border-[#E5E5E5] rounded-xl p-3 mb-4 max-h-[140px] overflow-y-auto">
+
+                <p className="text-xs text-[#8E8E8E] mb-2">
+                  Select Brands
+                </p>
+
+                {brands.map(b => (
+                  <label
+                    key={b._id}
+                    className="flex items-center gap-2 text-sm mb-1 cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={form.brands?.includes(b.slug)}
+                      onChange={e => {
+                        const checked = e.target.checked;
+
+                        setForm(prev => ({
+                          ...prev,
+                          brands: checked
+                            ? [...(prev.brands || []), b.slug]
+                            : prev.brands.filter(v => v !== b.slug)
+                        }));
+                      }}
+                    />
+
+                    {b.name}
+                  </label>
+                ))}
+
+              </div>
+            )}
+
+            {/* IMAGE */}
+            {tab === "product" && (
+              <>
+                {preview && (
+                  <img
+                    src={preview}
+                    className="w-32 h-32 rounded-xl object-cover border mb-3"
+                  />
+                )}
+
+                <label className="flex items-center gap-2 text-sm text-[#8E8E8E] cursor-pointer mb-4">
+
+                  <FiUpload /> Upload Image
+
+                  <input
+                    type="file"
+                    hidden
+                    accept="image/*"
+                    onChange={e => {
+                      const file = e.target.files[0];
+                      if (!file) return;
+
+                      setForm({ ...form, image: file });
+                      setPreview(URL.createObjectURL(file));
+                    }}
+                  />
+
+                </label>
+              </>
+            )}
+
+            {/* ACTIONS */}
+            <div className="flex justify-end gap-4 mt-8">
+
               <button
                 type="button"
                 onClick={() => setShowForm(false)}
-                className="px-4 py-2 text-sm border border-[#E5E5E5] rounded-lg text-[#8E8E8E]"
+                className="text-[#8E8E8E]"
               >
                 Cancel
               </button>
 
               <button
                 type="submit"
-                className="px-5 py-2 text-sm bg-[#0B0B0B] text-white rounded-lg"
+                disabled={!isValid}
+                className={`px-6 py-2.5 rounded-full transition ${
+                  isValid
+                    ? "bg-black text-white"
+                    : "bg-[#E5E5E5] text-[#8E8E8E]"
+                }`}
               >
                 Save
               </button>
+
             </div>
+
           </form>
+
         </div>
       )}
+
     </div>
   );
-};
-
-export default Categories;
+}

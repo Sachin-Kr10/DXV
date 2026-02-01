@@ -1,26 +1,10 @@
-import { useEffect, useState } from "react";
 import { Navigate } from "react-router";
-import api from "../api/api";
+import { useAuth } from "../context/AuthContext";
 
 export default function AdminRoute({ children }) {
-  const [status, setStatus] = useState("loading");
+  const { user, loading } = useAuth();
 
-  useEffect(() => {
-    api.get("/auth/me", { withCredentials: true })
-      .then(res => {
-        if (
-          res.data.loggedIn &&
-          res.data.user?.role === "admin"
-        ) {
-          setStatus("allowed");
-        } else {
-          setStatus("denied");
-        }
-      })
-      .catch(() => setStatus("denied"));
-  }, []);
-
-  if (status === "loading") {
+  if (loading) {
     return (
       <div className="h-screen flex items-center justify-center">
         Checking access...
@@ -28,7 +12,7 @@ export default function AdminRoute({ children }) {
     );
   }
 
-  if (status === "denied") {
+  if (!user || user.role !== "admin") {
     return <Navigate to="/" replace />;
   }
 

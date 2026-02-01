@@ -8,6 +8,8 @@ import InstaPic from "../components/InstaPic";
 import CategorySlider from "../features/category/CategorySlider";
 import SubCategories from "../features/category/SubCategories";
 import ProductSlider from "../features/product/ProductSlider";
+import Footer from "../components/Footer";
+import FooterFeature from "../components/FooterFeatures";
 
 
 import { CiDeliveryTruck } from "react-icons/ci";
@@ -92,15 +94,14 @@ function Home() {
           </div>
         </div>
       </section>
-
       <SubCategories tag="Popular" filters={filters} setFilters={setFilters} />
-
       <ProductSlider tag="popular" filters={filters} />
-
       <AdsBannerSlider slide={2} />
       <SubCategories tag="Featured" filters={filters} setFilters={setFilters}/>
       <ProductSlider tag="featured" filters={filters}/>
       <InstaPic />
+      <FooterFeature/>
+      <Footer/>
     </>
   );
 }

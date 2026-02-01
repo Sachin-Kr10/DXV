@@ -50,8 +50,8 @@ function App() {
                   }
                 />
               </Routes>
-              <FooterFeatures />
-              <Footer />
+              {/* <FooterFeatures /> */}
+              {/* <Footer /> */}
             </>
           }
         />

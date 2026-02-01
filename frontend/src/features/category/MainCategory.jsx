@@ -13,8 +13,6 @@ function MainCategory({filters, setFilters}) {
       try {
         setLoading(true);
         const res = await api.get("/nav/maincategories");
-        console.log("API RESPONSE 👉", res.data);
-
         setMainCategories([
           {name:"Home",slug:"all"},
           ...res.data,

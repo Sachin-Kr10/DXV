@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import api from "../../api/api";
 
 export default function Signup({ setView, setAuthData }) {
@@ -11,20 +11,28 @@ export default function Signup({ setView, setAuthData }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const submittingRef = useRef(false);
+
   const inputBase =
     "w-full px-4 py-3 rounded-lg bg-white border border-[#E5E5E5] text-[#1A1A1A] placeholder-[#8E8E8E] focus:outline-none focus:border-[#C9A24D] focus:ring-1 focus:ring-[#C9A24D] transition";
 
   const handleChange = e => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+
+    setForm(prev => ({
+      ...prev,
+      [name]:
+        name === "phone"
+          ? value.replace(/\D/g, "")
+          : value
+    }));
 
     setError("");
   };
 
   const submit = async e => {
     e.preventDefault();
+    if (loading || submittingRef.current) return;
 
     const fullName = form.fullName.trim();
     const email = form.email.trim().toLowerCase();
@@ -41,13 +49,13 @@ export default function Signup({ setView, setAuthData }) {
     }
 
     if (!/^[6-9]\d{9}$/.test(phone)) {
-  setError("Enter a valid Indian mobile number");
-  return;
-}
-
+      setError("Enter a valid Indian mobile number");
+      return;
+    }
 
     try {
       setLoading(true);
+      submittingRef.current = true;
       setError("");
 
       await api.post("/auth/request-otp", {
@@ -67,6 +75,7 @@ export default function Signup({ setView, setAuthData }) {
       setError(
         err.response?.data?.message || "Something went wrong"
       );
+      submittingRef.current = false;
     } finally {
       setLoading(false);
     }
@@ -85,6 +94,7 @@ export default function Signup({ setView, setAuthData }) {
         onChange={handleChange}
         className={`${inputBase} mb-4`}
         autoFocus
+        disabled={loading}
       />
 
       <input
@@ -94,6 +104,7 @@ export default function Signup({ setView, setAuthData }) {
         value={form.email}
         onChange={handleChange}
         className={`${inputBase} mb-4`}
+        disabled={loading}
       />
 
       <div className="flex mb-4">
@@ -108,6 +119,7 @@ export default function Signup({ setView, setAuthData }) {
           value={form.phone}
           onChange={handleChange}
           maxLength={10}
+          disabled={loading}
           className="flex-1 px-4 py-3 bg-white border border-l-0 border-[#E5E5E5] rounded-r-lg text-[#1A1A1A] placeholder-[#8E8E8E] focus:outline-none focus:border-[#C9A24D] focus:ring-1 focus:ring-[#C9A24D] transition"
         />
       </div>
@@ -121,7 +133,7 @@ export default function Signup({ setView, setAuthData }) {
       <button
         type="submit"
         disabled={loading}
-        className="w-full py-3 rounded-full bg-black text-white font-medium transition hover:bg-[#000000] active:scale-[0.98] disabled:opacity-60"
+        className="w-full py-3 rounded-full bg-black text-white font-medium transition active:scale-[0.98] disabled:opacity-60 disabled:pointer-events-none"
       >
         {loading ? "Sending..." : "Continue"}
       </button>

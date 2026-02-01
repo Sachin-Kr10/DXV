@@ -3,21 +3,32 @@ import api from "../../api/api";
 import { useAuth } from "../../context/AuthContext";
 
 export default function VerifyOTP({ setView, authData, onClose, onSuccess }) {
-  const { fetchUser } = useAuth();
+  const { login } = useAuth();
+
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
-  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
   const [timer, setTimer] = useState(60);
 
   const submittedRef = useRef(false);
 
+  /* RESET ON AUTH DATA CHANGE */
+  useEffect(() => {
+    submittedRef.current = false;
+    setOtp("");
+    setMessage("");
+  }, [authData]);
+
+  /* REDIRECT SAFETY */
   useEffect(() => {
     if (!authData?.email || !authData?.purpose) {
       setView("login");
-      return;
     }
+  }, [authData, setView]);
 
+  /* TIMER */
+  useEffect(() => {
     setTimer(60);
 
     const countdown = setInterval(() => {
@@ -31,31 +42,30 @@ export default function VerifyOTP({ setView, authData, onClose, onSuccess }) {
     }, 1000);
 
     return () => clearInterval(countdown);
-  }, [authData, setView]);
+  }, [authData]);
 
-  const submit = async e => {
+  const submit = async (e) => {
     if (e) e.preventDefault();
-
     if (loading || submittedRef.current) return;
 
     const cleanOtp = otp.trim();
 
     if (cleanOtp.length !== 6) {
-      setError("Enter 6-digit OTP");
+      setMessage("Enter 6-digit OTP");
       return;
     }
 
     if (!authData?.email || !authData?.purpose) {
-      setError("Session expired. Try again.");
+      setMessage("Session expired. Try again.");
       return;
     }
 
     try {
       setLoading(true);
-      setError("");
+      setMessage("");
       submittedRef.current = true;
 
-      await api.post("/auth/verify-otp", {
+      const res = await api.post("/auth/verify-otp", {
         email: authData.email,
         otp: cleanOtp,
         purpose: authData.purpose,
@@ -63,30 +73,27 @@ export default function VerifyOTP({ setView, authData, onClose, onSuccess }) {
         phone: authData.phone
       });
 
-      alert("Login successful!");
+      /* 🔑 UPDATE AUTH STATE (NO /auth/me) */
+      login({
+        user: res.data.user,
+        accessToken: res.data.accessToken
+      });
 
-await fetchUser();
-onSuccess();
-
-
-
+      onSuccess();
     } catch (err) {
       submittedRef.current = false;
-
-      setError(
-        err.response?.data?.message || "Invalid OTP"
-      );
+      setMessage(err.response?.data?.message || "Invalid OTP");
     } finally {
       setLoading(false);
     }
   };
 
   const resendOtp = async () => {
-    if (!authData?.email || timer > 0) return;
+    if (!authData?.email || timer > 0 || resending) return;
 
     try {
       setResending(true);
-      setError("");
+      setMessage("");
 
       await api.post("/auth/request-otp", {
         email: authData.email,
@@ -94,19 +101,19 @@ onSuccess();
       });
 
       setTimer(60);
+      setMessage("OTP resent successfully");
 
-      setError("OTP resent successfully!");
-
-      setTimeout(() => setError(""), 2500);
+      setTimeout(() => setMessage(""), 2500);
     } catch {
-      setError("Failed to resend OTP");
+      setMessage("Failed to resend OTP");
     } finally {
       setResending(false);
     }
   };
 
+  /* AUTO SUBMIT — SAFE */
   useEffect(() => {
-    if (otp.length === 6) {
+    if (otp.length === 6 && !submittedRef.current && !loading) {
       submit();
     }
   }, [otp]);
@@ -127,23 +134,22 @@ onSuccess();
         autoFocus
         inputMode="numeric"
         onChange={e => {
-          const value = e.target.value.replace(/\D/g, "");
-          setOtp(value);
-          setError("");
+          setOtp(e.target.value.replace(/\D/g, ""));
+          setMessage("");
         }}
         className="w-full text-center text-xl tracking-widest py-3 rounded-lg bg-white border border-[#E5E5E5] focus:border-[#C9A24D] outline-none mb-3"
         placeholder="000000"
       />
 
-      {error && (
+      {message && (
         <p
           className={`text-xs mb-3 ${
-            error.includes("successfully")
+            message.includes("successfully")
               ? "text-green-600"
               : "text-red-500"
           }`}
         >
-          {error}
+          {message}
         </p>
       )}
 

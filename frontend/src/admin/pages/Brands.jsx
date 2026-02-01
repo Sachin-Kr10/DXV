@@ -1,161 +1,307 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { FiPlus, FiEdit, FiToggleLeft, FiToggleRight } from "react-icons/fi";
+import {
+  FiPlus,
+  FiEdit,
+  FiToggleLeft,
+  FiToggleRight,
+  FiX,
+  FiUpload
+} from "react-icons/fi";
+import api from "../../api/api";
 
-const Brands = () => {
+/* ================= DEFAULT FORM ================= */
+
+const emptyForm = {
+  name: "",
+  logo: null,
+  mainCategories: [],
+  sortOrder: 0
+};
+
+export default function Brands() {
   const [brands, setBrands] = useState([]);
-  const [showForm, setShowForm] = useState(false);
+  const [mainCats, setMainCats] = useState([]);
+
+  const [form, setForm] = useState(emptyForm);
   const [editId, setEditId] = useState(null);
+  const [showForm, setShowForm] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const [form, setForm] = useState({
-    name: "",
-  });
+  /* ================= LOAD ================= */
 
-  const loadBrands = () => {
-    axios
-      .get("http://localhost:3000/api/brands")
-      .then((res) => setBrands(res.data))
-      .catch((err) => console.error(err));
+  const loadData = async () => {
+    setLoading(true);
+    try {
+      const [b, m] = await Promise.all([
+        api.get("/admin/brands"),
+        api.get("/admin/categories/main")
+      ]);
+
+      setBrands(b.data || []);
+      setMainCats(m.data || []);
+    } catch (err) {
+      console.error("Failed to load brands", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    loadBrands();
+    loadData();
   }, []);
+
+  /* ================= FORM ================= */
 
   const openAdd = () => {
     setEditId(null);
-    setForm({ name: "" });
+    setForm(emptyForm);
     setShowForm(true);
   };
 
   const openEdit = (brand) => {
     setEditId(brand._id);
-    setForm({ name: brand.name });
+    setForm({
+      name: brand.name,
+      logo: null,
+      mainCategories: brand.mainCategories || [],
+      sortOrder: brand.sortOrder || 0
+    });
     setShowForm(true);
   };
 
-  const saveBrand = (e) => {
+  const saveBrand = async (e) => {
     e.preventDefault();
 
-    const url = editId
-      ? `http://localhost:3000/api/admin/brands/${editId}`
-      : "http://localhost:3000/api/admin/brands";
+    const fd = new FormData();
+    fd.append("name", form.name);
+    fd.append("sortOrder", Number(form.sortOrder));
 
-    const method = editId ? "put" : "post";
+    form.mainCategories.forEach(c =>
+      fd.append("mainCategories", c)
+    );
 
-    axios[method](url, form)
-      .then(() => {
-        setShowForm(false);
-        loadBrands();
-      })
-      .catch((err) => console.error(err));
+    if (form.logo) fd.append("logo", form.logo);
+
+    try {
+      if (editId) {
+        await api.put(`/admin/brands/${editId}`, fd);
+      } else {
+        await api.post("/admin/brands", fd);
+      }
+
+      setShowForm(false);
+      loadData();
+    } catch (err) {
+      console.error("Save brand failed", err);
+    }
   };
-  const toggleBrand = (id) => {
-    axios
-      .patch(`http://localhost:3000/api/admin/brands/${id}/toggle`)
-      .then(loadBrands)
-      .catch((err) => console.error(err));
+
+  const toggleBrand = async (id) => {
+    try {
+      await api.patch(`/admin/brands/${id}/toggle`);
+      loadData();
+    } catch (err) {
+      console.error("Toggle failed", err);
+    }
   };
+
+  /* ================= UI ================= */
+
+  if (loading) {
+    return (
+      <div className="p-6 text-[#8E8E8E]">
+        Loading brands…
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-xl font-semibold text-[#1A1A1A]">
-          Brands
-        </h1>
+    <div className="p-6 bg-[#F7F7F7] min-h-screen">
+      {/* HEADER */}
+      <div className="flex justify-between items-center mb-8">
+        <div>
+          <h1 className="text-2xl font-semibold text-[#0B0B0B]">
+            Brands
+          </h1>
+          <p className="text-sm text-[#8E8E8E]">
+            Manage brand partners & visibility
+          </p>
+        </div>
 
         <button
           onClick={openAdd}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#0B0B0B] text-white text-sm"
+          className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#000000] text-white"
         >
           <FiPlus /> Add Brand
         </button>
       </div>
-      <div className="bg-white rounded-xl border overflow-hidden">
+
+      {/* TABLE */}
+      <div className="bg-white rounded-2xl border border-[#E5E5E5] overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-[#F7F7F7]">
+          <thead className="bg-[#F7F7F7] text-[#8E8E8E]">
             <tr>
-              <th className="p-4 text-left">Brand Name</th>
+              <th className="p-4 text-left">Brand</th>
+              <th>Main Categories</th>
+              <th>Order</th>
               <th>Status</th>
               <th className="p-4 text-right">Actions</th>
             </tr>
           </thead>
 
           <tbody>
-            {brands.map((brand) => (
-              <tr key={brand._id} className="border-t">
-                <td className="p-4">{brand.name}</td>
+            {brands.map(b => (
+              <tr
+                key={b._id}
+                className="border-t hover:bg-[#F7F7F7]"
+              >
+                <td className="p-4 flex items-center gap-3">
+                  <img
+                    src={b.logo}
+                    alt={b.name}
+                    className="w-12 h-12 rounded-xl object-contain border bg-white"
+                  />
+                  <div>
+                    <div className="font-medium text-[#1A1A1A]">
+                      {b.name}
+                    </div>
+                    <div className="text-xs text-[#8E8E8E]">
+                      {b.slug}
+                    </div>
+                  </div>
+                </td>
+
+                <td className="capitalize text-sm">
+                  {b.mainCategories.join(", ")}
+                </td>
+
+                <td className="font-medium">
+                  {b.sortOrder}
+                </td>
 
                 <td>
                   <span
-                    className={`px-2 py-1 text-xs rounded-full ${
-                      brand.isActive
-                        ? "bg-green-100 text-green-700"
-                        : "bg-red-100 text-red-700"
+                    className={`px-3 py-1 rounded-full text-xs ${
+                      b.isActive
+                        ? "bg-[#C9A24D]/20 text-[#C9A24D]"
+                        : "bg-[#E5E5E5] text-[#8E8E8E]"
                     }`}
                   >
-                    {brand.isActive ? "Active" : "Disabled"}
+                    {b.isActive ? "Active" : "Disabled"}
                   </span>
                 </td>
 
                 <td className="p-4 flex justify-end gap-4">
-                  <button
-                    onClick={() => openEdit(brand)}
-                    className="text-[#8E8E8E] hover:text-[#0B0B0B]"
-                  >
+                  <button onClick={() => openEdit(b)}>
                     <FiEdit />
                   </button>
-
-                  <button
-                    onClick={() => toggleBrand(brand._id)}
-                    className="text-[#8E8E8E] hover:text-[#C9A24D]"
-                  >
-                    {brand.isActive ? (
-                      <FiToggleRight size={18} />
-                    ) : (
-                      <FiToggleLeft size={18} />
-                    )}
+                  <button onClick={() => toggleBrand(b._id)}>
+                    {b.isActive ? <FiToggleRight /> : <FiToggleLeft />}
                   </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+
+        {brands.length === 0 && (
+          <div className="p-6 text-center text-[#8E8E8E]">
+            No brands created yet
+          </div>
+        )}
       </div>
+
+      {/* MODAL */}
       {showForm && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
           <form
             onSubmit={saveBrand}
-            className="bg-white p-6 rounded-xl w-full max-w-sm"
+            className="bg-white rounded-2xl w-full max-w-xl p-8 relative"
           >
-            <h2 className="font-semibold mb-4">
+            <button
+              type="button"
+              onClick={() => setShowForm(false)}
+              className="absolute top-4 right-4 text-[#8E8E8E]"
+            >
+              <FiX />
+            </button>
+
+            <h2 className="text-xl font-semibold mb-6">
               {editId ? "Edit Brand" : "Add Brand"}
             </h2>
 
             <input
+              placeholder="Brand Name"
               required
-              placeholder="Brand name"
               value={form.name}
-              onChange={(e) =>
+              onChange={e =>
                 setForm({ ...form, name: e.target.value })
               }
-              className="w-full border rounded-lg px-4 py-2 mb-4"
+              className="w-full mb-4 border p-3 rounded-lg"
             />
 
-            <div className="flex justify-end gap-3">
+            <input
+              type="number"
+              placeholder="Sort Order"
+              value={form.sortOrder}
+              onChange={e =>
+                setForm({ ...form, sortOrder: e.target.value })
+              }
+              className="w-full mb-4 border p-3 rounded-lg"
+            />
+
+            <select
+              multiple
+              value={form.mainCategories}
+              onChange={e =>
+                setForm({
+                  ...form,
+                  mainCategories: [...e.target.selectedOptions].map(o => o.value)
+                })
+              }
+              className="w-full mb-4 border p-3 rounded-lg h-[120px]"
+            >
+              {mainCats.map(c => (
+                <option key={c._id} value={c.slug}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+
+            {/* LOGO UPLOAD */}
+            <label className="flex items-center gap-2 text-sm text-[#8E8E8E] cursor-pointer mb-6">
+              <FiUpload />
+              Upload Brand Logo
+              <input
+                type="file"
+                accept="image/*"
+                onChange={e =>
+                  setForm({ ...form, logo: e.target.files[0] })
+                }
+                className="hidden"
+              />
+            </label>
+
+            {form.logo && (
+              <img
+                src={URL.createObjectURL(form.logo)}
+                className="w-20 h-20 mb-6 rounded-xl object-contain border"
+              />
+            )}
+
+            <div className="flex justify-end gap-4">
               <button
                 type="button"
                 onClick={() => setShowForm(false)}
-                className="px-4 py-2 text-sm border rounded-lg"
+                className="text-[#8E8E8E]"
               >
                 Cancel
               </button>
-
               <button
                 type="submit"
-                className="px-4 py-2 text-sm bg-[#0B0B0B] text-white rounded-lg"
+                className="bg-[#000000] text-white px-6 py-2.5 rounded-full"
               >
-                Save
+                Save Brand
               </button>
             </div>
           </form>
@@ -163,6 +309,4 @@ const Brands = () => {
       )}
     </div>
   );
-};
-
-export default Brands;
+}

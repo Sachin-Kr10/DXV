@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { FaGoogle } from "react-icons/fa";
 import api from "../../api/api";
 
@@ -7,13 +7,16 @@ export default function Login({ setView, setAuthData }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const submittingRef = useRef(false);
+
   const inputBase =
     "w-full px-4 py-3 rounded-lg bg-white border border-[#E5E5E5] text-[#1A1A1A] placeholder-[#8E8E8E] focus:outline-none focus:border-[#C9A24D] focus:ring-1 focus:ring-[#C9A24D] transition";
 
   const submit = async e => {
     e.preventDefault();
+    if (loading || submittingRef.current) return;
 
-    const cleanEmail = email.trim();
+    const cleanEmail = email.trim().toLowerCase();
 
     if (!cleanEmail) {
       setError("Email is required");
@@ -27,6 +30,7 @@ export default function Login({ setView, setAuthData }) {
 
     try {
       setLoading(true);
+      submittingRef.current = true;
       setError("");
 
       await api.post("/auth/request-otp", {
@@ -44,6 +48,7 @@ export default function Login({ setView, setAuthData }) {
       setError(
         err.response?.data?.message || "Failed to send OTP"
       );
+      submittingRef.current = false;
     } finally {
       setLoading(false);
     }
@@ -65,6 +70,7 @@ export default function Login({ setView, setAuthData }) {
         }}
         className={`${inputBase} mb-4`}
         autoFocus
+        disabled={loading}
       />
 
       {error && (
@@ -78,6 +84,7 @@ export default function Login({ setView, setAuthData }) {
           type="button"
           onClick={() => setView("forgot")}
           className="text-xs text-[#C9A24D] hover:underline transition"
+          disabled={loading}
         >
           Forgot Email?
         </button>
@@ -86,7 +93,7 @@ export default function Login({ setView, setAuthData }) {
       <button
         type="submit"
         disabled={loading}
-        className="w-full py-3 rounded-full bg-black text-white font-medium transition hover:bg-[#000000] active:scale-[0.98] mb-5 disabled:opacity-60"
+        className="w-full py-3 rounded-full bg-black text-white font-medium transition active:scale-[0.98] mb-5 disabled:opacity-60 disabled:pointer-events-none"
       >
         {loading ? "Sending..." : "Send OTP"}
       </button>
@@ -101,7 +108,8 @@ export default function Login({ setView, setAuthData }) {
 
       <button
         type="button"
-        className="w-full py-3 rounded-lg bg-white border border-[#E5E5E5] flex items-center justify-center gap-2 text-[#1A1A1A] hover:border-[#C9A24D] transition"
+        disabled={loading}
+        className="w-full py-3 rounded-lg bg-white border border-[#E5E5E5] flex items-center justify-center gap-2 text-[#1A1A1A] hover:border-[#C9A24D] transition disabled:opacity-60"
       >
         <FaGoogle className="text-[18px]" />
         <span className="text-sm font-medium">Google</span>

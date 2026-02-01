@@ -5,23 +5,34 @@ import VerifyOTP from "./VerifyOtp";
 import ForgotPassword from "./ForgotPassword";
 import { IoClose } from "react-icons/io5";
 
+const INITIAL_AUTH_DATA = {
+  email: "",
+  purpose: ""
+};
+
 export default function AuthModel({ onClose }) {
   const [view, setView] = useState("login");
-  const [authData, setAuthData] = useState({
-    email: "",
-    purpose: ""
-  });
+  const [authData, setAuthData] = useState(INITIAL_AUTH_DATA);
 
-  const switchView = newView => {
+  const switchView = (newView) => {
+    if (newView !== "otp") {
+      setAuthData(INITIAL_AUTH_DATA);
+    }
     setView(newView);
+  };
+
+  const handleClose = () => {
+    setView("login");
+    setAuthData(INITIAL_AUTH_DATA);
+    onClose();
   };
 
   return (
     <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur flex items-center justify-center">
       <div className="relative w-[92%] max-w-md min-h-[520px] bg-[#F7F7F7] rounded-2xl p-8 shadow-xl flex flex-col">
-        
+
         <button
-          onClick={onClose}
+          onClick={handleClose}
           className="absolute top-4 right-2 text-[#8E8E8E] hover:text-[#C9A24D]"
         >
           <IoClose size={25} />
@@ -54,7 +65,7 @@ export default function AuthModel({ onClose }) {
         )}
 
         <div className="flex-1 flex flex-col justify-center">
-          
+
           {view === "login" && (
             <Login
               setView={switchView}
@@ -71,12 +82,11 @@ export default function AuthModel({ onClose }) {
 
           {view === "otp" && authData?.email && (
             <VerifyOTP
-  setView={switchView}
-  authData={authData}
-  onClose={onClose}
-  onSuccess={onClose}
-/>
-
+              setView={switchView}
+              authData={authData}
+              onClose={handleClose}
+              onSuccess={handleClose}
+            />
           )}
 
           {view === "forgot" && (
