@@ -1,15 +1,15 @@
 import React, { useState} from "react";
-import MainCategory from "../features/category/MainCategory";
-import ImageSlider from "../features/slider/ImageSlider";
-import BrandSlider from "../features/brands/BrandSlider";
-import AdsBannerSlider from "../features/slider/AdsBannerSlider";
-import InstaPic from "../components/InstaPic";
+import MainCategory from "../features/category/maincategory";
+import ImageSlider from "../features/slider/imageslider";
+import BrandSlider from "../features/brands/brandslider";
+import AdsBannerSlider from "../features/slider/adsbannerslider";
+import InstaPic from "../components/instapic";
 
-import CategorySlider from "../features/category/CategorySlider";
-import SubCategories from "../features/category/SubCategories";
-import ProductSlider from "../features/product/ProductSlider";
-import Footer from "../components/Footer";
-import FooterFeature from "../components/FooterFeatures";
+import CategorySlider from "../features/category/categoryslider";
+import SubCategories from "../features/category/subcategories";
+import ProductSlider from "../features/product/productslider";
+import Footer from "../components/footer";
+import FooterFeature from "../components/footerfeatures";
 
 
 import { CiDeliveryTruck } from "react-icons/ci";

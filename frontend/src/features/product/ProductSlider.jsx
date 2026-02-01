@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Navigation } from "swiper/modules";
 import "swiper/css";
 import api from "../../api/api";
-import ProductItem from "./ProductCard";
+import ProductItem from "./productcard";
 
 function ProductSlider({ filters, tag }) {
   const [products, setProducts] = useState([]);

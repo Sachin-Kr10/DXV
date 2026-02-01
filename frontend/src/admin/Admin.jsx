@@ -1,13 +1,13 @@
 import { Routes, Route, Navigate } from "react-router";
 
-import Sidebar from "./components/AdminSidebar";
-import Header from "./components/AdminHeader";
+import Sidebar from "./components/adminsidebar";
+import Header from "./components/adminheader";
 import Dashboard from "./pages/dashboard";
-import Products from "./pages/Products";
-import Categories from "./pages/Categories";
-import Brands from "./pages/Brands";
-import Users from "./pages/Users";
-import Orders from "./pages/Orders";
+import Products from "./pages/products";
+import Categories from "./pages/categories";
+import Brands from "./pages/brands";
+import Users from "./pages/users";
+import Orders from "./pages/orders";
 
 export default function AdminLayout() {
   return (

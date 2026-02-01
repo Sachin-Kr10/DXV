@@ -19,7 +19,7 @@ const Dashboard = () => {
 
   const loadDashboard = () => {
     axios
-      .get("http://localhost:3000/api/admin/dashboard")
+      .get("")
       .then((res) => {
         setStats(res.data.stats);
         setRecentOrders(res.data.recentOrders);

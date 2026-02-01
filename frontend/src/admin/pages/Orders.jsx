@@ -7,7 +7,7 @@ const Orders = () => {
 
   const loadOrders = () => {
     axios
-      .get("http://localhost:3000/api/admin/orders")
+      .get("")
       .then((res) => setOrders(res.data))
       .catch((err) => console.error(err));
   };

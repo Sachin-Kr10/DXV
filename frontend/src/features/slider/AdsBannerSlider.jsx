@@ -4,7 +4,7 @@ import { Autoplay, Navigation } from "swiper/modules";
 import { Link } from "react-router";
 import "swiper/css";
 import "swiper/css/navigation";
-import BannerBox from "../../components/BannerBox";
+import BannerBox from "../../components/bannerbox";
 
 
 import img1 from "../../assets/images/1.jpg";

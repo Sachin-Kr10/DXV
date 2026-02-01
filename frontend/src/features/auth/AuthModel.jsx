@@ -1,8 +1,8 @@
 import { useState } from "react";
-import Login from "./Login";
-import Signup from "./Signup";
-import VerifyOTP from "./VerifyOtp";
-import ForgotPassword from "./ForgotPassword";
+import Login from "./login";
+import Signup from "./signup";
+import VerifyOTP from "./verifyotp";
+import ForgotPassword from "./forgotemail";
 import { IoClose } from "react-icons/io5";
 
 const INITIAL_AUTH_DATA = {

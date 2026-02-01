@@ -1,20 +1,20 @@
 import "../styles/App.css";
 import { Routes, Route,useNavigate } from "react-router";
-import ScrollToTop from "../components/ScrollToTop";
+import ScrollToTop from "../components/scrolltotop";
 
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import FooterFeatures from "../components/FooterFeatures";
+import Header from "../components/header";
+import Footer from "../components/footer";
+import FooterFeatures from "../components/footerfeatures";
 
-import Home from "../pages/Home";
-import ProductDetail from "../pages/ProductDetail";
-import Cart from "../pages/Cart";
-import Checkout from "../pages/Checkout";
-import Payment from "../pages/Payment";
-import Auth from "../features/auth/AuthModel";
-import Admin from "../admin/Admin";
-import AdminRoute from "../routes/AdminRoute";
-import PrivateRoute from "../routes/PrivateRoute";
+import Home from "../pages/home";
+import ProductDetail from "../pages/productdetail";
+import Cart from "../pages/cart";
+import Checkout from "../pages/checkout";
+import Payment from "../pages/payment";
+import Auth from "../features/auth/authmodel";
+import Admin from "../admin/admin";
+import AdminRoute from "../routes/adminroute";
+import PrivateRoute from "../routes/privateroute";
 
 function App() {
   const navigate = useNavigate();

@@ -1,5 +1,5 @@
 import { Link, NavigationType } from "react-router";
-import Search from "./Search";
+import Search from "./search";
 import Badge from "@mui/material/Badge";
 import { styled } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
@@ -9,7 +9,7 @@ import { IoHeartCircleOutline } from "react-icons/io5";
 import { FaOpencart } from "react-icons/fa";
 import { PiUserCircleFill } from "react-icons/pi";
 import { useEffect, useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/authcontext";
 import api from "../api/api";
 
 

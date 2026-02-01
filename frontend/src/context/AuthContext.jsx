@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import api from "../api/api";
-import { authStore } from "../api/authStore";
+import { authStore } from "../api/authstore";
 
 const AuthContext = createContext(null);
 

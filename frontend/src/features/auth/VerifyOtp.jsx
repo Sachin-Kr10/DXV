@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import api from "../../api/api";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/authcontext";
 
 export default function VerifyOTP({ setView, authData, onClose, onSuccess }) {
   const { login } = useAuth();
