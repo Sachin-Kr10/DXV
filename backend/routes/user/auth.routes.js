@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 
 const authController = require("../../controllers/auth.controller");
-const authMiddleware = require("../../middlewares/auth.middleware");
+const accessAuth = require("../../middlewares/accessAuth.middleware");
+
 
 router.post("/request-otp", authController.requestOtp);
 
@@ -14,10 +15,15 @@ router.post("/logout", authController.logout);
 
 router.post("/recover-email", authController.recoverEmail);
 
-router.get("/me", authMiddleware, (req, res) => {
+
+router.get("/me", accessAuth(), (req, res) => {
   res.json({
-    loggedIn: true,
-    user: req.user
+    user: {
+      id: req.user._id,
+      fullName: req.user.fullName,
+      email: req.user.email,
+      role: req.user.role
+    }
   });
 });
 

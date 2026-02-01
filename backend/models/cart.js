@@ -98,15 +98,12 @@ const cartSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+cartSchema.index({
+  userId: 1,
+  "items.productId": 1,
+  "items.color": 1,
+  "items.size": 1,
+});
 
-cartSchema.index(
-  {
-    userId: 1,
-    "items.productId": 1,
-    "items.color": 1,
-    "items.size": 1,
-  },
-  { unique: true, sparse: true }
-);
 
 module.exports = mongoose.model("Cart", cartSchema);
