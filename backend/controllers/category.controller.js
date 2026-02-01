@@ -1,6 +1,6 @@
-const MainCategory = require("../models/MainCategory");
-const ProdCategory = require("../models/ProdCategory");
-const SubCategory = require("../models/SubCategory");
+const MainCategory = require("../models/maincategory.model");
+const ProdCategory = require("../models/prodcategory.model");
+const SubCategory = require("../models/subcategory.model");
 const uploadToCloudinary = require("../utils/cloudinary");
 const slugify = require("slugify");
 

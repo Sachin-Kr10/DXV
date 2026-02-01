@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
-const MainCategory = require("../../models/MainCategory");
-const Brand = require("../../models/Brand");
-const ProdCategory = require("../../models/ProdCategory");
-const SubCategory = require("../../models/SubCategory");
+const MainCategory = require("../../models/maincategory.model");
+const Brand = require("../../models/brand.model");
+const ProdCategory = require("../../models/prodcategory.model");
+const SubCategory = require("../../models/subcategory.model");
 
 router.get("/maincategories", async (req, res) => {
   try {

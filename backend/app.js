@@ -8,7 +8,6 @@ const productRoutes =  require("./routes/user/product.routes")
 const authRoutes = require('./routes/user/auth.routes');
 const errorMiddleware = require("./middlewares/error.middleware");
 const adminProductRoutes = require("./routes/admin/product.routes")
-// const uploadRoutes = require("./routes/admin/upload.routes")
 const adminCategoryRoutes = require("./routes/admin/category.routes")
 const brandAdminRoutes = require("./routes/admin/brand.routes");
 

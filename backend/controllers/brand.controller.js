@@ -1,4 +1,4 @@
-const Brand = require("../models/Brand");
+const Brand = require("../models/brand.model");
 const uploadToCloudinary = require("../utils/cloudinary");
 const slugify = require("slugify");
 
