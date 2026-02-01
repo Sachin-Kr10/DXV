@@ -1,4 +1,4 @@
-import "../styles/App.css";
+import "./styles/app.css";
 import { Routes, Route,useNavigate } from "react-router";
 import ScrollToTop from "./components/scrolltotop";
 
