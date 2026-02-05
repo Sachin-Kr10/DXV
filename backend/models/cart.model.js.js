@@ -50,6 +50,12 @@ const cartItemSchema = new mongoose.Schema(
       type: Number,
       required: true,
       min: 1,
+      validate: {
+        validator(v) {
+          return v <= this.maxStock;
+        },
+        message: "Quantity exceeds available stock"
+      }
     },
 
     maxStock: {
@@ -68,6 +74,7 @@ const cartItemSchema = new mongoose.Schema(
     colorHex: {
       type: String,
       required: true,
+      uppercase: true,
     },
 
     size: {
@@ -76,8 +83,13 @@ const cartItemSchema = new mongoose.Schema(
       uppercase: true,
       trim: true,
     },
-  },
-  { _id: false }
+
+    subtotal: {
+      type: Number,
+      required: true,
+      min: 0
+    }
+  }
 );
 
 const cartSchema = new mongoose.Schema(
@@ -94,6 +106,21 @@ const cartSchema = new mongoose.Schema(
       type: [cartItemSchema],
       default: [],
     },
+
+    totalItems: {
+      type: Number,
+      default: 0
+    },
+
+    totalPrice: {
+      type: Number,
+      default: 0
+    },
+
+    totalMrp: {
+      type: Number,
+      default: 0
+    }
   },
   { timestamps: true }
 );
@@ -104,6 +131,5 @@ cartSchema.index({
   "items.color": 1,
   "items.size": 1,
 });
-
 
 module.exports = mongoose.model("Cart", cartSchema);

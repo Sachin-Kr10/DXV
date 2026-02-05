@@ -10,6 +10,7 @@ const errorMiddleware = require("./middlewares/error.middleware");
 const adminProductRoutes = require("./routes/admin/product.routes")
 const adminCategoryRoutes = require("./routes/admin/category.routes")
 const brandAdminRoutes = require("./routes/admin/brand.routes");
+const cartRoutes = require("./routes/user/cart.routes")
 
 const app = express();
 
@@ -22,11 +23,12 @@ app.use(cookieParser());
 app.use("/api/nav", navRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/cart", cartRoutes);
+
 
 
 
 app.use("/api/admin/brands", brandAdminRoutes);
-
 app.use("/api/admin/products", adminProductRoutes);
 app.use("/api/admin/categories", adminCategoryRoutes);
 

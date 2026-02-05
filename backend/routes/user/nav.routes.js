@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-
 const MainCategory = require("../../models/maincategory.model");
 const Brand = require("../../models/brand.model");
 const ProdCategory = require("../../models/prodcategory.model");
