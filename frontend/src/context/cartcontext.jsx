@@ -1,128 +1,151 @@
-import { createContext, useContext, useState, useMemo,useEffect } from "react";
+import { createContext, useContext, useEffect, useState, useMemo } from "react";
+import api from "../api/api";
+import { useAuth } from "./authcontext";
+import { authStore } from "../api/authstore";
 
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
-  const [cart, setCart] = useState(() => {
-  const saved = localStorage.getItem("cart");
-  return saved ? JSON.parse(saved) : [];
-});
 
-useEffect(() => {
-  localStorage.setItem("cart", JSON.stringify(cart));
-}, [cart]);
+  const { user, loading: authLoading } = useAuth();
 
+  const [cart, setCart] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  
-  const addToCart = (product, options) => {
-  const variant = product.variants.find(
-    (v) => v.colorName === options.color
-  );
+  /* ================= LOAD CART ================= */
 
-  if (!variant) return;
+  const loadCart = async () => {
 
-  const image = variant.images[0];
+    if (!authStore.getAccessToken()) return;
 
-  setCart((prev) => {
-    const existing = prev.find(
-      (item) =>
-        item.productId === product._id &&
-        item.color === options.color &&
-        item.size === options.size
-    );
+    try {
+      const res = await api.get("/cart");
+      setCart(res.data);
 
-    if (existing) {
-      return prev.map((item) =>
-        item === existing
-          ? { ...item, qty: item.qty + options.qty }
-          : item
-      );
+    } catch (err) {
+      setCart(null);
+
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /* ================= WAIT FOR AUTH ================= */
+
+  useEffect(() => {
+
+    if (!authLoading && user) {
+      loadCart();
     }
 
-    return [
-      ...prev,
-      {
-        productId: product._id,
-        slug: product.slug,
+    if (!authLoading && !user) {
+      setCart(null);
+      setLoading(false);
+    }
 
-        brand: product.brand,
-        title: product.title,
+  }, [authLoading, user]);
 
-        price: product.price,
-        mrp: product.mrp,
+  /* ================= ADD ================= */
 
-        image,
+  const addToCart = async (product, options) => {
 
-        color: options.color,
-        colorHex: variant.colorHex,
+    if (!options?.color || !options?.size || !options?.qty) return;
 
-        size: options.size,
-        qty: options.qty,
+    const res = await api.post("/cart/add", {
+      productId: product._id,
+      color: options.color,
+      size: options.size,
+      qty: options.qty
+    });
 
-        maxStock:
-          variant.sizes.find((s) => s.size === options.size)
-            ?.stock || 0,
-      },
-    ];
-  });
-};
-
-  const increaseQty = (index) => {
-  setCart((prev) =>
-    prev.map((item, i) =>
-      i === index && item.qty < item.maxStock
-        ? { ...item, qty: item.qty + 1 }
-        : item
-    )
-  );
-};
-
-
-  const decreaseQty = (index) => {
-    setCart((prev) =>
-      prev.map((item, i) =>
-        i === index && item.qty > 1
-          ? { ...item, qty: item.qty - 1 }
-          : item
-      )
-    );
+    setCart(res.data);
   };
 
-  const removeItem = (index) => {
-    setCart((prev) => prev.filter((_, i) => i !== index));
+  /* ================= QTY ================= */
+
+  const increaseQty = async item => {
+
+    if (item.qty >= item.maxStock) return;
+
+    const res = await api.patch("/cart/qty", {
+      itemId: item._id,
+      qty: item.qty + 1
+    });
+
+    setCart(res.data);
   };
+
+  const decreaseQty = async item => {
+
+    if (item.qty <= 1) return;
+
+    const res = await api.patch("/cart/qty", {
+      itemId: item._id,
+      qty: item.qty - 1
+    });
+
+    setCart(res.data);
+  };
+
+  /* ================= REMOVE ================= */
+
+  const removeItem = async id => {
+
+    const res = await api.delete(`/cart/item/${id}`);
+    setCart(res.data);
+  };
+
+  /* ================= CLEAR ================= */
+
+  const clearCart = async () => {
+
+    await api.delete("/cart/clear");
+
+    setCart({
+      items: [],
+      totalItems: 0,
+      totalPrice: 0,
+      totalMrp: 0
+    });
+  };
+
+  /* ================= TOTALS ================= */
 
   const totals = useMemo(() => {
-  const subtotal = cart.reduce(
-    (sum, item) => sum + item.price * item.qty,
-    0
-  );
 
-  const totalMrp = cart.reduce(
-    (sum, item) => sum + item.mrp * item.qty,
-    0
-  );
+    if (!cart) {
+      return {
+        subtotal: 0,
+        totalMrp: 0,
+        discount: 0,
+        total: 0,
+        totalItems: 0
+      };
+    }
 
-  const discount = totalMrp - subtotal;
+    return {
+      subtotal: cart.totalPrice,
+      totalMrp: cart.totalMrp,
+      discount: cart.totalMrp - cart.totalPrice,
+      total: cart.totalPrice,
+      totalItems: cart.totalItems
+    };
 
-  return {
-    subtotal,
-    totalMrp,
-    discount,
-    total: subtotal,
-  };
-}, [cart]);
-
+  }, [cart]);
 
   return (
     <CartContext.Provider
       value={{
         cart,
+        cartItems: cart?.items || [],
+        loading,
         addToCart,
         increaseQty,
         decreaseQty,
         removeItem,
+        clearCart,
         totals,
+        reloadCart: loadCart
       }}
     >
       {children}

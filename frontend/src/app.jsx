@@ -3,8 +3,6 @@ import { Routes, Route,useNavigate } from "react-router";
 import ScrollToTop from "./components/scrolltotop";
 
 import Header from "./components/header";
-import Footer from "./components/footer";
-import FooterFeatures from "./components/footerfeatures";
 
 import Home from "./pages/home";
 import ProductDetail from "./pages/productdetail";
@@ -32,7 +30,9 @@ function App() {
                 <Route path={"/"} element={<Home />} />
                 <Route path={"/product/:slug"} element={<ProductDetail />} />
                 <Route path="/auth" element={<Auth onClose={() => navigate("/")}/>} />
-                <Route path={"/cart"} element={<Cart />} />
+                <Route path={"/cart"} element={<PrivateRoute>
+                      <Cart />
+                    </PrivateRoute>} />
                 <Route
                   path={"/checkout"}
                   element={
@@ -50,8 +50,6 @@ function App() {
                   }
                 />
               </Routes>
-              <FooterFeatures />
-              <Footer />
             </>
           }
         />
