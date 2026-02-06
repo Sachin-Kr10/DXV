@@ -271,16 +271,15 @@ exports.updateProduct = async (req, res, next) => {
 
 exports.toggleProductStatus = async (req, res, next) => {
   try {
-
-    const product = await Product.findByIdAndUpdate(
-      req.params.id,
-      { $bit: { isActive: { xor: 1 } } },
-      { new: true }
-    );
+    const product = await Product.findById(req.params.id);
 
     if (!product) {
       return res.status(404).json({ message: "Not found" });
     }
+
+    product.isActive = !product.isActive;
+
+    await product.save();
 
     res.json({ isActive: product.isActive });
 
@@ -288,6 +287,7 @@ exports.toggleProductStatus = async (req, res, next) => {
     next(err);
   }
 };
+
 
 
 /* ================= DELETE ================= */

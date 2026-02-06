@@ -31,6 +31,10 @@ const emptySub = {
 
 export default function Category() {
   const [tab, setTab] = useState("main");
+  const [saving, setSaving] = useState(false);
+const [success, setSuccess] = useState("");
+const [error, setError] = useState("");
+
 
   const [mainCats, setMainCats] = useState([]);
   const [prodCats, setProdCats] = useState([]);
@@ -101,32 +105,52 @@ export default function Category() {
 
   /* ================= SAVE ================= */
 
-  const save = async (e) => {
-    e.preventDefault();
+ const save = async (e) => {
+  e.preventDefault();
 
-    const fd = new FormData();
+  setSaving(true);
+  setError("");
+  setSuccess("");
 
-    Object.entries(form).forEach(([k, v]) => {
-      if (v === null || v === "") return;
+  const fd = new FormData();
 
-      if (Array.isArray(v)) {
-        v.forEach(val => fd.append(k, val));
-      } else {
-        fd.append(k, v);
-      }
-    });
+  Object.entries(form).forEach(([k, v]) => {
+    if (v === null || v === "") return;
 
-    const base = `/admin/categories/${tab}`;
+    if (Array.isArray(v)) {
+      v.forEach(val => fd.append(k, val));
+    } else {
+      fd.append(k, v);
+    }
+  });
 
+  const base = `/admin/categories/${tab}`;
+
+  try {
     if (editId) {
       await api.put(`${base}/${editId}`, fd);
+      setSuccess("Updated successfully");
     } else {
       await api.post(base, fd);
+      setSuccess("Added successfully");
     }
 
-    setShowForm(false);
-    loadAll();
-  };
+    await loadAll();
+
+    setTimeout(() => {
+      setShowForm(false);
+      setSuccess("");
+    }, 1200);
+
+  } catch (err) {
+    setError(
+      err.response?.data?.message ||
+      "Failed to save"
+    );
+  } finally {
+    setSaving(false);
+  }
+};
 
   /* ================= TOGGLE ================= */
 
@@ -295,185 +319,294 @@ export default function Category() {
       </div>
 
       {/* MODAL */}
-      {showForm && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur flex items-center justify-center z-50">
+     {/* MODAL */}
+{showForm && (
+  <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
 
-          <form
-            onSubmit={save}
-            className="bg-white w-full max-w-xl rounded-2xl p-8 relative shadow-xl"
+    <form
+      onSubmit={save}
+      className="bg-white w-full max-w-xl max-h-[90vh]
+      overflow-y-auto rounded-2xl p-8 relative shadow-2xl"
+    >
+
+      {/* CLOSE */}
+      <button
+        type="button"
+        onClick={() => setShowForm(false)}
+        className="absolute top-4 right-4 text-[#8E8E8E] hover:text-black transition"
+      >
+        <FiX />
+      </button>
+
+      {/* HEADER */}
+      <h2 className="text-xl font-semibold mb-6">
+        {editId ? "Edit" : "Add"} {tab.toUpperCase()}
+      </h2>
+
+      {/* STATUS */}
+      {error && (
+        <div className="mb-5 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm">
+          {error}
+        </div>
+      )}
+
+      {success && (
+        <div className="mb-5 px-4 py-3 rounded-xl bg-green-50 border border-green-200 text-green-600 text-sm">
+          {success}
+        </div>
+      )}
+
+      {/* NAME */}
+      <input
+        required
+        placeholder="Name"
+        value={form.name || ""}
+        onChange={e =>
+          setForm({ ...form, name: e.target.value })
+        }
+        className="w-full mb-5 border border-[#E5E5E5] p-3 rounded-xl
+        focus:ring-2 focus:ring-black/20 outline-none"
+      />
+
+      {/* ORDER (STEPPER) */}
+      <div className="mb-5">
+
+        <p className="text-sm font-medium mb-2">
+          Display Order
+        </p>
+
+        <div className="flex border rounded-xl overflow-hidden">
+
+          <button
+            type="button"
+            onClick={() =>
+              setForm({
+                ...form,
+                sortOrder: Math.max(0, (form.sortOrder || 0) - 1)
+              })
+            }
+            className="w-12 h-12 bg-[#F7F7F7]
+            hover:bg-black hover:text-white font-semibold"
           >
+            −
+          </button>
 
-            <button
-              type="button"
-              onClick={() => setShowForm(false)}
-              className="absolute top-4 right-4 text-[#8E8E8E]"
-            >
-              <FiX />
-            </button>
+          <input
+            type="number"
+            min="0"
+            value={form.sortOrder || 0}
+            onChange={e =>
+              setForm({
+                ...form,
+                sortOrder: Math.max(0, Number(e.target.value) || 0)
+              })
+            }
+            className="flex-1 text-center outline-none"
+          />
 
-            <h2 className="text-xl font-semibold mb-6 text-[#0B0B0B]">
-              {editId ? "Edit" : "Add"} {tab.toUpperCase()}
-            </h2>
+          <button
+            type="button"
+            onClick={() =>
+              setForm({
+                ...form,
+                sortOrder: (form.sortOrder || 0) + 1
+              })
+            }
+            className="w-12 h-12 bg-[#F7F7F7]
+            hover:bg-black hover:text-white font-semibold"
+          >
+            +
+          </button>
 
-            {/* NAME */}
-            <input
-              placeholder="Name"
-              required
-              value={form.name || ""}
-              onChange={e =>
-                setForm({ ...form, name: e.target.value })
-              }
-              className="w-full p-3 mb-4 border border-[#E5E5E5] rounded-xl focus:outline-none focus:border-[#C9A24D]"
-            />
+        </div>
+      </div>
 
-            {/* SORT */}
-            <input
-              type="number"
-              placeholder="Sort Order"
-              value={form.sortOrder || 0}
-              onChange={e =>
-                setForm({ ...form, sortOrder: e.target.value })
-              }
-              className="w-full p-3 mb-4 border border-[#E5E5E5] rounded-xl focus:outline-none focus:border-[#C9A24D]"
-            />
+      {/* MAIN */}
+      {tab !== "main" && (
+        <select
+          value={form.mainCategory || ""}
+          onChange={e =>
+            setForm({ ...form, mainCategory: e.target.value })
+          }
+          required
+          className="w-full mb-5 border border-[#E5E5E5] p-3 rounded-xl
+          focus:ring-2 focus:ring-black/20 outline-none"
+        >
+          <option value="">Select Main</option>
 
-            {/* MAIN */}
-            {tab !== "main" && (
-              <select
-                value={form.mainCategory || ""}
-                onChange={e =>
-                  setForm({ ...form, mainCategory: e.target.value })
-                }
-                className="w-full p-3 mb-4 border border-[#E5E5E5] rounded-xl focus:outline-none focus:border-[#C9A24D]"
-                required
-              >
-                <option value="">Select Main</option>
+          {mainCats.map(m => (
+            <option key={m._id} value={m.slug}>
+              {m.name}
+            </option>
+          ))}
+        </select>
+      )}
 
-                {mainCats.map(m => (
-                  <option key={m._id} value={m.slug}>
-                    {m.name}
-                  </option>
-                ))}
-              </select>
-            )}
+      {/* PRODUCT */}
+      {tab === "sub" && (
+        <select
+          value={form.prodCategory || ""}
+          onChange={e =>
+            setForm({ ...form, prodCategory: e.target.value })
+          }
+          required
+          className="w-full mb-5 border border-[#E5E5E5] p-3 rounded-xl
+          focus:ring-2 focus:ring-black/20 outline-none"
+        >
+          <option value="">Select Product</option>
 
-            {/* PRODUCT */}
-            {tab === "sub" && (
-              <select
-                value={form.prodCategory || ""}
-                onChange={e =>
-                  setForm({ ...form, prodCategory: e.target.value })
-                }
-                className="w-full p-3 mb-4 border border-[#E5E5E5] rounded-xl focus:outline-none focus:border-[#C9A24D]"
-                required
-              >
-                <option value="">Select Product</option>
+          {prodCats
+            .filter(p => p.mainCategory === form.mainCategory)
+            .map(p => (
+              <option key={p._id} value={p.slug}>
+                {p.name}
+              </option>
+            ))}
+        </select>
+      )}
 
-                {prodCats
-                  .filter(p => p.mainCategory === form.mainCategory)
-                  .map(p => (
-                    <option key={p._id} value={p.slug}>
-                      {p.name}
-                    </option>
-                  ))}
-              </select>
-            )}
+      {/* BRANDS (PREMIUM CHECKBOX) */}
+      {(tab === "product" || tab === "sub") && (
+        <div className="mb-6">
 
-            {/* BRANDS */}
-            {(tab === "product" || tab === "sub") && (
-              <div className="border border-[#E5E5E5] rounded-xl p-3 mb-4 max-h-[140px] overflow-y-auto">
+          <p className="text-sm font-medium mb-3">
+            Select Brands
+          </p>
 
-                <p className="text-xs text-[#8E8E8E] mb-2">
-                  Select Brands
-                </p>
+          <div className="grid grid-cols-2 gap-3 max-h-[160px] overflow-y-auto">
 
-                {brands.map(b => (
-                  <label
-                    key={b._id}
-                    className="flex items-center gap-2 text-sm mb-1 cursor-pointer"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={form.brands?.includes(b.slug)}
-                      onChange={e => {
-                        const checked = e.target.checked;
+            {brands.map(b => {
+              const checked =
+                form.brands?.includes(b.slug);
 
-                        setForm(prev => ({
-                          ...prev,
-                          brands: checked
-                            ? [...(prev.brands || []), b.slug]
-                            : prev.brands.filter(v => v !== b.slug)
-                        }));
-                      }}
-                    />
-
-                    {b.name}
-                  </label>
-                ))}
-
-              </div>
-            )}
-
-            {/* IMAGE */}
-            {tab === "product" && (
-              <>
-                {preview && (
-                  <img
-                    src={preview}
-                    className="w-32 h-32 rounded-xl object-cover border mb-3"
-                  />
-                )}
-
-                <label className="flex items-center gap-2 text-sm text-[#8E8E8E] cursor-pointer mb-4">
-
-                  <FiUpload /> Upload Image
+              return (
+                <label
+                  key={b._id}
+                  className={`flex items-center gap-3 px-4 py-2 rounded-xl border cursor-pointer transition
+                  ${
+                    checked
+                      ? "border-black bg-black/5"
+                      : "border-[#E5E5E5]"
+                  }`}
+                >
 
                   <input
-                    type="file"
+                    type="checkbox"
                     hidden
-                    accept="image/*"
+                    checked={checked}
                     onChange={e => {
-                      const file = e.target.files[0];
-                      if (!file) return;
-
-                      setForm({ ...form, image: file });
-                      setPreview(URL.createObjectURL(file));
+                      if (e.target.checked) {
+                        setForm(prev => ({
+                          ...prev,
+                          brands: [
+                            ...(prev.brands || []),
+                            b.slug
+                          ]
+                        }));
+                      } else {
+                        setForm(prev => ({
+                          ...prev,
+                          brands: prev.brands.filter(
+                            x => x !== b.slug
+                          )
+                        }));
+                      }
                     }}
                   />
 
+                  <div
+                    className={`w-5 h-5 rounded-md border flex items-center justify-center
+                    ${
+                      checked
+                        ? "bg-black border-black"
+                        : "border-[#CFCFCF]"
+                    }`}
+                  >
+                    {checked && (
+                      <svg
+                        className="w-3.5 h-3.5 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="3"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M5 13l4 4L19 7" />
+                      </svg>
+                    )}
+                  </div>
+
+                  <span className="text-sm font-medium">
+                    {b.name}
+                  </span>
+
                 </label>
-              </>
-            )}
+              );
+            })}
 
-            {/* ACTIONS */}
-            <div className="flex justify-end gap-4 mt-8">
-
-              <button
-                type="button"
-                onClick={() => setShowForm(false)}
-                className="text-[#8E8E8E]"
-              >
-                Cancel
-              </button>
-
-              <button
-                type="submit"
-                disabled={!isValid}
-                className={`px-6 py-2.5 rounded-full transition ${
-                  isValid
-                    ? "bg-black text-white"
-                    : "bg-[#E5E5E5] text-[#8E8E8E]"
-                }`}
-              >
-                Save
-              </button>
-
-            </div>
-
-          </form>
-
+          </div>
         </div>
       )}
+
+      {/* IMAGE */}
+      {tab === "product" && (
+        <>
+          {preview && (
+            <img
+              src={preview}
+              className="w-28 h-28 rounded-xl border object-cover mb-3"
+            />
+          )}
+
+          <label className="flex items-center gap-2 text-sm text-[#8E8E8E] cursor-pointer mb-5">
+
+            <FiUpload /> Upload Image
+
+            <input
+              type="file"
+              hidden
+              accept="image/*"
+              onChange={e => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                setForm({ ...form, image: file });
+                setPreview(URL.createObjectURL(file));
+              }}
+            />
+
+          </label>
+        </>
+      )}
+
+      {/* ACTIONS */}
+      <div className="flex justify-end gap-4 pt-4 border-t">
+
+        <button
+          type="button"
+          onClick={() => setShowForm(false)}
+          className="text-[#8E8E8E]"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          disabled={saving || !isValid}
+          className={`px-6 py-2.5 rounded-full font-medium transition
+          ${
+            saving || !isValid
+              ? "bg-gray-300 text-gray-500"
+              : "bg-black text-white hover:opacity-90"
+          }`}
+        >
+          {saving ? "Saving..." : "Save"}
+        </button>
+
+      </div>
+
+    </form>
+  </div>
+)}
 
     </div>
   );
