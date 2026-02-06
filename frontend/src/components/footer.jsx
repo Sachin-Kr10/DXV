@@ -141,6 +141,11 @@ function Footer() {
                   Login/signUp
                 </a>
               </li>
+              <li>
+                <a href="/admin/products" className="hover:text-[#0B0B0B]">
+                  Admin
+                </a>
+              </li>
             </ul>
           </FooterSection>
 
