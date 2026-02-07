@@ -30,7 +30,8 @@ It follows industry best practices for authentication, performance, and deployme
 ⚙️ Hosted on **Render**
 
 > ⚠️ For **Admin Access**, contact:  
-> 📞 **9625973956**
+> LinkedIn: https://linkedin.com/in/sachin-kr10  
+> Email: sachinjnv100@gmail.com
 
 ---
 
